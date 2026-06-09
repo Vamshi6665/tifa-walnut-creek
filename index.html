@@ -713,92 +713,82 @@ function track(event,data){
   fetch('/api/analytics',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({event,data:{...data,hour,ts:Date.now()}})
+    body:JSON.stringify({event,data:{...data,hour,today:new Date().toISOString().slice(0,10),ts:Date.now()}})
   }).catch(()=>{});
 }
 
 async function loadDashboard(){
   try{
     const r=await fetch('/api/analytics');
+    if(!r.ok) throw new Error('API error');
     const d=await r.json();
-    const quizzes=d.quiz_complete||[];
-    const now=new Date();
-    const todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
-    const todayQuizzes=quizzes.filter(q=>q.ts>=todayStart);
 
-    document.getElementById('ds-total').textContent=quizzes.length;
-    document.getElementById('ds-today').textContent=todayQuizzes.length;
+    // ── Summary stats ──
+    document.getElementById('ds-total').textContent=d.total||0;
+    document.getElementById('ds-today').textContent=d.todayCount||0;
+    document.getElementById('ds-diet-pct').textContent=(d.dietPct||0)+'%';
+    const ph=d.peakHour;
+    document.getElementById('ds-peak').textContent=d.total?`${ph>12?ph-12:ph||12}${ph>=12?'pm':'am'}`:'—';
 
-    // Update stats bar
+    // Update hero stats bar
     const sc=document.getElementById('quiz-count-stat');
-    if(sc) sc.textContent=quizzes.length||'—';
+    if(sc) sc.textContent=d.total||'—';
 
-    // Dietary usage
-    const withDiet=quizzes.filter(q=>q.dietUsed).length;
-    const pct=quizzes.length?Math.round(withDiet/quizzes.length*100):0;
-    document.getElementById('ds-diet-pct').textContent=pct+'%';
-
-    // Top flavors
-    const flavorCounts={};
-    quizzes.forEach(q=>{if(q.flavor)flavorCounts[q.flavor]=(flavorCounts[q.flavor]||0)+1});
-    const topFlavors=Object.entries(flavorCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
-    const maxF=topFlavors[0]?.[1]||1;
+    // ── Top flavors ──
     const fDiv=document.getElementById('dash-flavors');
-    fDiv.innerHTML=topFlavors.length?topFlavors.map(([name,cnt])=>`
+    const flavors=d.flavors||[];
+    const maxF=flavors[0]?.count||1;
+    fDiv.innerHTML=flavors.length?flavors.map(f=>`
       <div class="dash-bar-row">
-        <div class="dash-bar-label">${FLAVORS[name]?.e||'🍨'} ${name}</div>
-        <div class="dash-bar-track"><div class="dash-bar-fill" style="width:${Math.round(cnt/maxF*100)}%"></div></div>
-        <div class="dash-bar-count">${cnt}</div>
+        <div class="dash-bar-label">${FLAVORS[f.name]?.e||'🍨'} ${f.name}</div>
+        <div class="dash-bar-track"><div class="dash-bar-fill" style="width:${Math.round(f.count/maxF*100)}%"></div></div>
+        <div class="dash-bar-count">${f.count}</div>
       </div>`).join(''):'<div class="dash-empty">No data yet — share the site!</div>';
 
-    // Dietary breakdown
-    const dietCounts={vegan:0,'dairy-free':0,'no-gluten':0,'no-nuts':0};
-    quizzes.forEach(q=>{if(q.diets)q.diets.forEach(d=>{if(dietCounts[d]!==undefined)dietCounts[d]++})});
+    // ── Dietary breakdown ──
     const dietLabels={vegan:'🌿 Vegan','dairy-free':'🥛 Dairy free','no-gluten':'🌾 Gluten free','no-nuts':'🥜 Nut free'};
-    const maxD=Math.max(...Object.values(dietCounts),1);
-    document.getElementById('dash-diets').innerHTML=Object.entries(dietCounts).map(([k,v])=>`
+    const diets=d.diets||[];
+    const maxD=diets[0]?.count||1;
+    document.getElementById('dash-diets').innerHTML=diets.length?diets.map(x=>`
       <div class="dash-bar-row">
-        <div class="dash-bar-label">${dietLabels[k]}</div>
-        <div class="dash-bar-track"><div class="dash-bar-fill" style="width:${Math.round(v/maxD*100)}%"></div></div>
-        <div class="dash-bar-count">${v}</div>
-      </div>`).join('');
+        <div class="dash-bar-label">${dietLabels[x.name]||x.name}</div>
+        <div class="dash-bar-track"><div class="dash-bar-fill" style="width:${Math.round(x.count/maxD*100)}%"></div></div>
+        <div class="dash-bar-count">${x.count}</div>
+      </div>`).join(''):'<div class="dash-empty">No data yet</div>';
 
-    // Occasions
-    const occCounts={solo:0,family:0,social:0,party:0};
+    // ── Occasions ──
     const occLabels={solo:'☀️ Just me',family:'👨‍👩‍👧 Family',social:'💑 Date/Friends',party:'🎂 Celebration'};
-    quizzes.forEach(q=>{if(q.occ&&occCounts[q.occ]!==undefined)occCounts[q.occ]++});
-    const maxO=Math.max(...Object.values(occCounts),1);
-    document.getElementById('dash-occasions').innerHTML=Object.entries(occCounts).map(([k,v])=>`
+    const occs=d.occasions||[];
+    const maxO=occs[0]?.count||1;
+    document.getElementById('dash-occasions').innerHTML=occs.length?occs.map(x=>`
       <div class="dash-bar-row">
-        <div class="dash-bar-label">${occLabels[k]}</div>
-        <div class="dash-bar-track"><div class="dash-bar-fill" style="width:${Math.round(v/maxO*100)}%"></div></div>
-        <div class="dash-bar-count">${v}</div>
-      </div>`).join('');
+        <div class="dash-bar-label">${occLabels[x.name]||x.name}</div>
+        <div class="dash-bar-track"><div class="dash-bar-fill" style="width:${Math.round(x.count/maxO*100)}%"></div></div>
+        <div class="dash-bar-count">${x.count}</div>
+      </div>`).join(''):'<div class="dash-empty">No data yet</div>';
 
-    // Feature 14: Hour chart
-    const hourCounts=Array(24).fill(0);
-    quizzes.forEach(q=>{if(q.hour!==undefined)hourCounts[q.hour]++});
-    const peakHour=hourCounts.indexOf(Math.max(...hourCounts));
-    document.getElementById('ds-peak').textContent=quizzes.length?`${peakHour>12?peakHour-12:peakHour||12}${peakHour>=12?'pm':'am'}`:'—';
-
-    // Show hours 10am-11pm (store hours)
+    // ── Hour-by-hour chart (Feature 14) ──
+    const hourCounts=d.hourCounts||{};
     const displayHours=[10,11,12,13,14,15,16,17,18,19,20,21,22];
-    const maxH=Math.max(...displayHours.map(h=>hourCounts[h]),1);
+    const maxH=Math.max(...displayHours.map(h=>hourCounts[h]||0),1);
     const chart=document.getElementById('dash-time-chart');
-    const labels=document.getElementById('dash-time-labels');
-    chart.innerHTML=''; labels.innerHTML='';
+    const labelsEl=document.getElementById('dash-time-labels');
+    chart.innerHTML=''; labelsEl.innerHTML='';
     displayHours.forEach(h=>{
+      const cnt=hourCounts[h]||0;
       const bar=document.createElement('div');
-      bar.className='dash-time-bar'+(h===peakHour&&quizzes.length?' active':'');
-      const pct=Math.max(Math.round(hourCounts[h]/maxH*100),4);
-      bar.style.height=pct+'%';
-      bar.title=`${h>12?h-12:h}${h>=12?'pm':'am'}: ${hourCounts[h]} quizzes`;
+      bar.className='dash-time-bar'+(h===ph&&d.total?' active':'');
+      bar.style.height=Math.max(Math.round(cnt/maxH*100),4)+'%';
+      bar.title=`${h>12?h-12:h||12}${h>=12?'pm':'am'}: ${cnt} quizzes`;
       chart.appendChild(bar);
       const lbl=document.createElement('span');
       lbl.textContent=h===10?'10a':h===12?'12p':h===17?'5p':h===20?'8p':h===22?'10p':'';
-      labels.appendChild(lbl);
+      labelsEl.appendChild(lbl);
     });
-  }catch(e){console.warn('Dashboard error:',e)}
+  }catch(e){
+    console.warn('Dashboard error:',e);
+    document.getElementById('dash-flavors').innerHTML='<div class="dash-empty">Connect Vercel KV to see live data</div>';
+  }
 }
 
 /* ══════════════════════════════════════════
