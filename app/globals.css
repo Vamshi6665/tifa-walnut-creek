@@ -1,0 +1,311 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------------ */
+/* Design tokens: Tifa Walnut Creek, green and white like the store.         */
+/* White paper and dark-green ink by default; `.on-green` flips a section to */
+/* deep Tifa green with white ink (every utility below reads these vars).    */
+/* ------------------------------------------------------------------------ */
+@theme {
+  --color-paper: #ffffff;
+  --color-paper-2: #f2f8f4;
+  --color-paper-3: #e4efe8;
+  --color-ink: #0c2a1c;
+  --color-ink-dim: #3d5f4c;
+  --color-ink-faint: #5e7a6b;
+  --color-green: #1f9a62; /* Tifa green: fills, marks, decoration */
+  --color-green-ink: #17784d; /* the same green, dark enough for text and buttons (AA) */
+  --color-green-deep: #0e3b28;
+  --color-leaf: #7fe0ae;
+  --color-line: rgb(12 42 28 / 0.12);
+
+  --font-display: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: light;
+  --btn-bg: var(--color-green-ink);
+  --btn-ink: #ffffff;
+  --btn-bg-hover: var(--color-green-deep);
+  --glass-bg: rgb(255 255 255 / 0.8);
+  --glass-shadow: 0 1px 2px rgb(12 42 28 / 0.06), 0 18px 40px -16px rgb(12 42 28 / 0.22);
+}
+
+/* deep-green sections (hero, gallery, quiz, dashboard, footer) */
+.on-green,
+[data-mode='night'] {
+  color-scheme: dark;
+  --color-paper: #0e3b28;
+  --color-paper-2: #124a33;
+  --color-paper-3: #17583d;
+  --color-ink: #ffffff;
+  --color-ink-dim: rgb(255 255 255 / 0.76);
+  --color-ink-faint: rgb(255 255 255 / 0.58);
+  --color-green: #7fe0ae;
+  --color-green-ink: #7fe0ae;
+  --color-line: rgb(255 255 255 / 0.16);
+  --btn-bg: #ffffff;
+  --btn-ink: #0e3b28;
+  --btn-bg-hover: #7fe0ae;
+  --glass-bg: rgb(14 59 40 / 0.62);
+  --glass-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.5);
+  color: var(--color-ink);
+}
+
+/* text over the store photo (hero, and the nav while it sits on the hero) */
+[data-mode='night'] {
+  --hero-ink: #ffffff;
+  --hero-ink-dim: rgb(255 255 255 / 0.8);
+  --hero-panel: rgb(14 59 40 / 0.42);
+  --hero-line: rgb(255 255 255 / 0.22);
+}
+/* back to white inside a green scope (the nav once it scrolls, its mobile menu) */
+.on-paper,
+[data-mode='day'] {
+  color-scheme: light;
+  --color-paper: #ffffff;
+  --color-paper-2: #f2f8f4;
+  --color-paper-3: #e4efe8;
+  --color-ink: #0c2a1c;
+  --color-ink-dim: #3d5f4c;
+  --color-ink-faint: #5e7a6b;
+  --color-green: #1f9a62;
+  --color-green-ink: #17784d;
+  --color-line: rgb(12 42 28 / 0.12);
+  --btn-bg: var(--color-green-ink);
+  --btn-ink: #ffffff;
+  --btn-bg-hover: var(--color-green-deep);
+  --glass-bg: rgb(255 255 255 / 0.9);
+  --glass-shadow: 0 1px 2px rgb(12 42 28 / 0.06), 0 18px 40px -16px rgb(12 42 28 / 0.22);
+}
+[data-mode='day'] {
+  --hero-ink: var(--color-ink);
+  --hero-ink-dim: var(--color-ink-dim);
+  --hero-panel: rgb(255 255 255 / 0.7);
+  --hero-line: var(--color-line);
+}
+
+html {
+  background: var(--color-paper);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 72px;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #1f9a62;
+  color: #ffffff;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Type: one family (Archivo), two widths. Display is set expanded and light,
+   in the "Monument Extended" register the brief asks for; body stays normal width. */
+.t-display {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 0.94;
+  font-size: clamp(2.3rem, 4.2vw, 4.5rem);
+}
+.t-h2 {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-size: clamp(2.1rem, 4.4vw, 4rem);
+  text-wrap: balance;
+}
+.t-h3 {
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+}
+.t-lede {
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.6;
+  max-width: 40ch;
+  text-wrap: pretty;
+}
+/* small structural label: sentence case, never all caps */
+.t-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--color-ink-dim);
+}
+.t-body {
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* Telemetry is the only place the mono face appears */
+.t-tele {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'zero' on;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-green-ink);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* component classes live in a layer so Tailwind utilities (hidden, md:flex, …) can override them */
+@layer components {
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 48px;
+    padding: 0 1.35rem;
+    border-radius: 3px;
+    font-weight: 500;
+    font-stretch: 112%;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s var(--ease-out-expo);
+    will-change: transform;
+  }
+  .btn-primary {
+    background: var(--btn-bg);
+    color: var(--btn-ink);
+  }
+  .btn-primary:hover {
+    background: var(--btn-bg-hover);
+  }
+  .btn-ghost {
+    border: 1px solid var(--hero-line, var(--color-line));
+    color: var(--hero-ink, var(--color-ink));
+    background: var(--hero-panel, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .btn-ghost:hover {
+    border-color: currentColor;
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+
+
+  /* Glass panel used for overlays / hover cards */
+  .holo {
+    background: var(--glass-bg);
+    border: 1px solid var(--color-line);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(18px) saturate(1.3);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  }
+
+  /* Scanline + grid texture for telemetry panels */
+  .hud {
+    position: relative;
+    background:
+      linear-gradient(rgb(127 224 174 / 0.05) 1px, transparent 1px) 0 0 / 100% 24px,
+      linear-gradient(180deg, rgb(20 80 54 / 0.55), rgb(10 45 30 / 0.7));
+    border: 1px solid var(--color-line);
+  }
+  .hud::before,
+  .hud::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--color-green);
+    border-style: solid;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .hud::before {
+    top: -1px;
+    left: -1px;
+    border-width: 1px 0 0 1px;
+  }
+  .hud::after {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 1px 1px 0;
+  }
+
+}
+
+/* Intro (see components/ui/Hero.jsx). Classes are set pre-paint in layout.jsx;
+   without JS or with reduced motion none of this applies. */
+#tf-preloader {
+  display: none;
+}
+.tf-intro:not(.tf-intro-quick) #tf-preloader {
+  display: grid;
+}
+.tf-intro [data-intro] {
+  opacity: 0;
+}
+
+/* Fluid cursor (fine pointers only; native cursor hidden only where we draw our own) */
+html.has-fluid-cursor,
+html.has-fluid-cursor a,
+html.has-fluid-cursor button,
+html.has-fluid-cursor canvas {
+  cursor: none;
+}
+html.has-fluid-cursor input,
+html.has-fluid-cursor textarea,
+html.has-fluid-cursor select {
+  cursor: auto;
+}
+
+/* Hover displacement on headings */
+.warp-hover {
+  transition: filter 0.4s;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
