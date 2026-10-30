@@ -1,13 +1,14 @@
 import { STORE } from '@/lib/config';
+import { LOGO_WHITE } from '@/content/media';
 
 const COLS = [
   {
-    title: 'Menu',
+    title: 'Here',
     links: [
-      ['Full menu', STORE.menu],
-      ['Catering', STORE.catering],
-      ['Gift cards', STORE.giftCards],
-      ['Merch', STORE.merch],
+      ["Today's flavors", '#flavors'],
+      ['Find my flavor', '#game'],
+      ['Reviews', '#reviews'],
+      ['Catering with Naina', '#catering'],
     ],
   },
   {
@@ -15,16 +16,12 @@ const COLS = [
     links: [
       [STORE.address, STORE.mapsHref],
       [STORE.phone, STORE.phoneHref],
-      ['Instagram', STORE.instagram],
+      ['Hours', '#visit'],
     ],
   },
   {
-    title: 'Company',
-    links: [
-      ['About Tifa', 'https://tifachocolateandgelato.com/about/'],
-      ['Franchising', 'https://tifafranchising.com'],
-      ['Contact us', 'https://tifachocolateandgelato.com/contact/'],
-    ],
+    title: 'Follow',
+    links: [[STORE.instagramHandle, STORE.instagram]],
   },
 ];
 
@@ -33,9 +30,14 @@ export default function Footer() {
     <footer className="border-t border-line bg-obsidian">
       <div className="mx-auto grid max-w-[1440px] gap-10 px-4 py-16 md:grid-cols-12 md:px-8">
         <div className="md:col-span-5">
-          <p className="font-display text-5xl font-light tracking-[-0.04em] [font-stretch:125%]">
-            tifa<span className="text-rose">.</span>
-          </p>
+          {LOGO_WHITE ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={LOGO_WHITE} alt="Tifa Chocolate & Gelato" className="h-14 w-auto" />
+          ) : (
+            <p className="font-display text-5xl font-light tracking-[-0.04em] [font-stretch:125%]">
+              tifa<span className="text-rose">.</span>
+            </p>
+          )}
           <p className="mt-4 max-w-[30ch] text-chrome-dim">Gather, enjoy, embrace. Tifa feels like home.</p>
         </div>
         {COLS.map((c) => (

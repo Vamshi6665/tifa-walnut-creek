@@ -10,6 +10,7 @@ import { DIETARY, pairingReason, topTraits } from '@/lib/flavors';
 import { playCollision, playStream } from '@/lib/audio';
 import { fetchMatchNote } from '@/lib/aiNotes';
 import { downloadPassport } from '@/lib/passport';
+import SafeBoundary from './SafeBoundary';
 import { useInView, usePrefersReducedMotion } from './useInView';
 import InertiaCard from './InertiaCard';
 import { Swatch } from './Hero';
@@ -99,7 +100,7 @@ export default function FlavorColliderQuiz() {
     <section id="game" className="relative scroll-mt-16 bg-obsidian" aria-labelledby="game-title">
       <div ref={stage} className="relative min-h-[100svh] overflow-hidden">
         <div className="absolute inset-0">
-          {near && tier !== 'none' ? <ParticleCollider active={visible} /> : null}
+          {near && tier !== 'none' ? <SafeBoundary><ParticleCollider active={visible} /></SafeBoundary> : null}
         </div>
 
         <div className="pointer-events-none relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col px-4 py-20 md:px-8 md:py-24">

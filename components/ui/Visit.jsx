@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { MapPin, Phone, Camera, Cake } from 'lucide-react';
 import { HOURS, STORE, openStatus, storeNow } from '@/lib/config';
+import Photo from './Photo';
 
 const fmt = (h) => `${((h + 11) % 12) + 1} ${h >= 12 ? 'PM' : 'AM'}`;
 // Display order Mon → Sun
@@ -30,6 +31,7 @@ export default function Visit() {
               Right in the heart of Walnut Creek.
             </h2>
             <p className="t-body mt-6 text-chrome-dim">{STORE.landmark} Close to Lafayette, Danville and Pleasant Hill.</p>
+            <Photo slot="storefront" className="mt-8 aspect-[4/3] rounded-lg" sizes="(min-width: 768px) 40vw, 100vw" />
             <div className="mt-8 flex flex-wrap gap-3">
               <a href={STORE.mapsHref} target="_blank" rel="noreferrer" className="btn btn-primary" data-magnetic>
                 <MapPin size={17} aria-hidden="true" /> Get directions
@@ -88,8 +90,8 @@ export default function Visit() {
                     </a>
                   </li>
                   <li>
-                    <a href={STORE.catering} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-chrome hover:text-vanilla">
-                      <Cake size={17} aria-hidden="true" /> Catering and events
+                    <a href="#catering" className="inline-flex items-center gap-2 text-chrome hover:text-vanilla">
+                      <Cake size={17} aria-hidden="true" /> Catering with Naina
                     </a>
                   </li>
                 </ul>

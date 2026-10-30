@@ -3,20 +3,19 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Sparkles } from 'lucide-react';
-import { FLAVORS, FLAVOR_BY_ID, MOODS, moodPicks, tasteTwins, topTraits, DIETARY } from '@/lib/flavors';
+import { FLAVORS, FLAVOR_BY_ID, MOODS, moodPicks, tasteTwins, topTraits, TRAIT_WORDS } from '@/lib/flavors';
+import { flavorPhoto } from '@/content/media';
+import Photo from './Photo';
 import { useTwinNotes } from '@/lib/aiNotes';
 import { useStore } from '@/lib/store';
 import { storeNow } from '@/lib/config';
+import SafeBoundary from './SafeBoundary';
 import { useInView, usePrefersReducedMotion } from './useInView';
 import { Swatch } from './Hero';
 
 const FlavorConstellation = dynamic(() => import('@/components/canvas/FlavorConstellation'), { ssr: false });
 
-const TAG_SHORT = { vegan: 'V', dairyFree: 'DF', glutenFree: 'GF', nutFree: 'NF' };
-const TRAIT_WORDS = {
-  sweet: 'sweet', creamy: 'creamy', fruity: 'fruity', nutty: 'nutty',
-  cocoa: 'cocoa', tangy: 'tangy', warm: 'warm spice', fresh: 'fresh',
-};
+
 
 function FridayDrop() {
   const [left, setLeft] = useState(null);
@@ -51,19 +50,21 @@ function FridayDrop() {
 }
 
 function Tags({ flavor, className = '' }) {
-  const on = DIETARY.filter((d) => flavor.tags[d.key]);
-  if (!on.length) return null;
+  const badges = [];
+  if (flavor.signature) badges.push(['Signature', 'Tifa signature flavor', 'border-vanilla/40 text-vanilla']);
+  if (flavor.tags.vegan) badges.push(['V', 'Vegan', 'border-mint/30 text-mint']);
+  if (flavor.tags.dairyFree) badges.push(['DF', 'Dairy-free', 'border-mint/30 text-mint']);
+  if (flavor.noSugar) badges.push(['No sugar', 'No sugar added', 'border-mint/30 text-mint']);
+  const contains = Object.entries(flavor.contains).filter(([, v]) => v).map(([k]) => k);
+  if (!badges.length && !contains.length) return null;
   return (
-    <span className={`flex gap-1 ${className}`}>
-      {on.map((d) => (
-        <abbr
-          key={d.id}
-          title={d.label}
-          className="rounded-md border border-mint/30 px-1.5 py-0.5 text-[0.7rem] font-medium text-mint no-underline"
-        >
-          {TAG_SHORT[d.key]}
+    <span className={`flex flex-wrap items-center gap-1 ${className}`}>
+      {badges.map(([short, title, cls]) => (
+        <abbr key={short} title={title} className={`rounded-[3px] border px-1.5 py-0.5 text-[0.7rem] font-medium no-underline ${cls}`}>
+          {short}
         </abbr>
       ))}
+      {contains.length ? <span className="text-[0.72rem] text-chrome-faint">Contains {contains.join(', ')}</span> : null}
     </span>
   );
 }
@@ -125,7 +126,7 @@ export default function FlavorsSection() {
       <div id="twins" className="mx-auto mt-10 grid max-w-[1440px] gap-6 px-4 md:px-8 lg:grid-cols-12">
         {/* constellation */}
         <div ref={stage} className="relative h-[62vh] min-h-[420px] overflow-hidden rounded-lg border border-line bg-[radial-gradient(80%_70%_at_50%_45%,#15151d,#0A0A0C)] lg:col-span-8 lg:h-[680px]">
-          {near && tier !== 'none' ? <FlavorConstellation active={visible} reducedMotion={reduce} labels={labels} /> : null}
+          {near && tier !== 'none' ? <SafeBoundary><FlavorConstellation active={visible} reducedMotion={reduce} labels={labels} /></SafeBoundary> : null}
           {/* labels pinned to 3D points by <Anchor> inside the canvas */}
           <div ref={focusLabel} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300">
             <span className="block -translate-x-1/2 -translate-y-[calc(100%+20px)] whitespace-nowrap rounded-[3px] bg-vanilla px-2.5 py-1 text-xs font-medium text-obsidian shadow-[0_0_24px_rgba(255,247,214,0.45)]">
@@ -171,6 +172,9 @@ export default function FlavorsSection() {
                 </option>
               ))}
             </select>
+            {flavorPhoto(focus) ? (
+              <Photo src={flavorPhoto(focus)} alt={flavor.name} className="mt-4 aspect-[4/3] rounded-md" sizes="(min-width: 1024px) 28vw, 100vw" />
+            ) : null}
             <div className="mt-4 flex items-center gap-3">
               <Swatch flavorId={focus} size={36} />
               <div>
@@ -249,7 +253,7 @@ export default function FlavorsSection() {
         <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4">
           <h3 className="t-h3">Today&apos;s menu</h3>
           <p className="text-sm text-chrome-dim">
-            {DIETARY.map((d) => `${TAG_SHORT[d.key]} ${d.label.toLowerCase()}`).join(', ')}. Ask our team about allergens.
+            V vegan, DF dairy-free. Allergen notes are from our menu; please confirm with our team in store.
           </p>
         </div>
         <div className="mt-6 grid gap-10 md:grid-cols-3">

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshCw, Table2, BarChart3 } from 'lucide-react';
 import { FLAVOR_BY_ID, FLAVORS, DIETARY } from '@/lib/flavors';
 import { useStore } from '@/lib/store';
+import SafeBoundary from './SafeBoundary';
 import { useInView, usePrefersReducedMotion } from './useInView';
 import { HourColumns, DailyLine, BarList, useAnimatedNumber } from './charts';
 import { Swatch } from './Hero';
@@ -28,7 +29,7 @@ function sampleData() {
     const weekend = [5, 6].includes(d.getDay());
     return { day: d.toISOString().slice(0, 10), count: Math.round((weekend ? 34 : 18) * (0.75 + rnd() * 0.5)) };
   });
-  const picks = ['pistachio', 'salted-caramel', 'mango', 'dark-chocolate', 'stracciatella', 'raspberry', 'matcha', 'hazelnut'];
+  const picks = ['salted-caramel', 'strawberry-rose-sorbetto', 'dark-chocolate', 'pistachio-lemon-curd', 'mango-chamoy-sorbetto', 'cookie-butter', 'stracciatella', 'honey-lavender'];
   const flavors = picks.map((id, i) => ({ id, count: Math.round(60 / (i + 1.4) + rnd() * 6) }));
   const total = daily.reduce((a, d) => a + d.count, 0) + 211;
   return {
@@ -196,7 +197,7 @@ export default function TelemetryDashboard() {
         <div className={`mt-6 grid gap-4 transition-opacity lg:grid-cols-12 ${loading && d ? 'opacity-70' : 'opacity-100'}`}>
           {/* holo map */}
           <div ref={globe} className="hud relative min-h-[340px] overflow-hidden rounded-md lg:col-span-5 lg:row-span-2">
-            {globeNear && tier !== 'none' ? <HoloTerrain active={globeVisible} reducedMotion={reduce} labels={mapLabels} /> : null}
+            {globeNear && tier !== 'none' ? <SafeBoundary><HoloTerrain active={globeVisible} reducedMotion={reduce} labels={mapLabels} /></SafeBoundary> : null}
             <div ref={storeLabel} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 opacity-0">
               <span className="t-tele block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md border border-rose/40 bg-obsidian/80 px-2 py-1 text-[0.7rem] text-chrome">
                 1545 Locust St

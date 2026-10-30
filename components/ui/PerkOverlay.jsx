@@ -5,14 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { LAMA_PERK } from '@/lib/config';
-import { FLAVOR_BY_ID } from '@/lib/flavors';
+import { FLAVOR_BY_NAME, BIRTHDAY_FLAVORS } from '@/lib/flavors';
 import { Swatch } from './Hero';
 
-// ⚠️ Sample month → flavor mapping; replace with the store's real birthday list.
-const BIRTHDAY = [
-  'dark-chocolate', 'raspberry', 'matcha', 'strawberry', 'mango', 'lemon',
-  'passion-fruit', 'pistachio', 'chai', 'salted-caramel', 'cinnamon', 'mint-chip',
-];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default function PerkOverlay() {
@@ -33,7 +28,8 @@ export default function PerkOverlay() {
     };
   }, [open, close]);
 
-  const flavor = month != null ? FLAVOR_BY_ID[BIRTHDAY[month]] : null;
+  const birthdayName = month != null ? BIRTHDAY_FLAVORS[month] : null;
+  const flavor = birthdayName ? FLAVOR_BY_NAME[birthdayName] : null;
 
   return (
     <AnimatePresence>
@@ -88,11 +84,12 @@ export default function PerkOverlay() {
                   </button>
                 ))}
               </div>
-              {flavor ? (
+              {birthdayName ? (
                 <p className="mt-4 flex items-center gap-3 text-chrome" aria-live="polite">
-                  <Swatch flavorId={flavor.id} size={28} />
+                  {flavor ? <Swatch flavorId={flavor.id} size={28} /> : null}
                   <span>
-                    Your birthday flavor is <strong className="text-vanilla">{flavor.name}</strong>. Mention it at the counter.
+                    Your birthday flavor is <strong className="text-vanilla">{birthdayName}</strong>. Mention it at the counter
+                    {flavor ? '.' : '; it rotates in seasonally.'}
                   </span>
                 </p>
               ) : null}

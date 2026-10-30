@@ -3,13 +3,15 @@
 import { useEffect, useState } from 'react';
 import { CloudRain, Moon, Sun, Menu, X } from 'lucide-react';
 import { useStore, useMode } from '@/lib/store';
+import { LOGO_WHITE } from '@/content/media';
 
 const LINKS = [
   { href: '#flavors', label: 'Flavors' },
   { href: '#game', label: 'Find yours' },
+  { href: '#reviews', label: 'Reviews' },
   { href: '#story', label: 'Our story' },
+  { href: '#catering', label: 'Catering' },
   { href: '#visit', label: 'Visit' },
-  { href: '#dashboard', label: 'Mission control' },
 ];
 
 const ICON = { day: Sun, night: Moon, rain: CloudRain };
@@ -40,18 +42,21 @@ export default function Nav() {
   return (
     <header
       data-intro="nav"
-      data-mode={onHero ? mode : 'night'}
+      data-mode="night"
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-500 ${
         scrolled ? 'border-b border-line bg-obsidian/75 backdrop-blur-xl' : 'border-b border-transparent'
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-6 px-4 md:px-8" aria-label="Main">
-        <a
-          href="#top"
-          className="font-display text-[1.6rem] font-[350] leading-none tracking-[-0.04em] text-[var(--hero-ink)] [font-stretch:125%]"
-          data-magnetic
-        >
-          tifa<span className="text-rose">.</span>
+        <a href="#top" className="flex items-center text-chrome" data-magnetic aria-label="Tifa Chocolate & Gelato, Walnut Creek home">
+          {LOGO_WHITE ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={LOGO_WHITE} alt="" className="h-8 w-auto" />
+          ) : (
+            <span className="font-display text-[1.6rem] font-[350] leading-none tracking-[-0.04em] [font-stretch:125%]">
+              tifa<span className="text-rose">.</span>
+            </span>
+          )}
         </a>
         <ul className="ml-6 hidden items-center gap-1 lg:flex">
           {LINKS.map((l) => (

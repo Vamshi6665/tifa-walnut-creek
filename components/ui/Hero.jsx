@@ -3,15 +3,18 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { Plus, RotateCcw } from 'lucide-react';
-import { useStore, useMode, MAX_SCOOPS } from '@/lib/store';
-import { FLAVOR_BY_ID, HERO_FLAVORS } from '@/lib/flavors';
+import { Star } from 'lucide-react';
+import { useStore, useMode } from '@/lib/store';
+import { FLAVOR_BY_ID } from '@/lib/flavors';
 import { openStatus, STORE } from '@/lib/config';
 import { introState, whenSceneReady } from '@/lib/intro';
+import { useReviews } from '@/lib/reviews';
+import { MEDIA, photo, cutouts, llamaCutout } from '@/content/media';
 import { useInView, usePrefersReducedMotion } from './useInView';
 import Decode from './Decode';
+import SafeBoundary from './SafeBoundary';
 
-const GelatoCanvas = dynamic(() => import('@/components/canvas/GelatoCanvas'), { ssr: false });
+const HeroStage = dynamic(() => import('@/components/canvas/HeroStage'), { ssr: false });
 
 export function Swatch({ flavorId, size = 18 }) {
   const f = FLAVOR_BY_ID[flavorId];
@@ -43,10 +46,10 @@ function Telemetry() {
   }, []);
   const status = now ? openStatus(now) : null;
   const rows = [
-    ['Location', `${STORE.lat.toFixed(4)}° N, ${Math.abs(STORE.lon).toFixed(4)}° W`],
+    ['Address', STORE.address],
     ['Outside', weather ? `${weather.tempF}°F, ${weather.label}` : 'Walnut Creek, CA'],
     ['Local time', now ? clockFmt.format(now) : '--:--'],
-    ['Counter', status ? status.label : 'Checking hours'],
+    ['Today', status ? status.label : 'Checking hours'],
   ];
   return (
     <dl className="w-[17.5rem] text-[0.8125rem]">
@@ -54,7 +57,7 @@ function Telemetry() {
         <div key={label} className="flex items-baseline justify-between gap-6 border-b border-[var(--hero-line)] py-2">
           <dt className="text-[var(--hero-ink-dim)]">{label}</dt>
           <dd className="t-tele flex items-center gap-2 text-right text-[var(--hero-ink)]">
-            {label === 'Counter' && status ? (
+            {label === 'Today' && status ? (
               <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${status.open ? 'bg-mint' : 'bg-rose'}`} />
             ) : null}
             <Decode text={value} delay={i * 0.09} />
@@ -65,76 +68,42 @@ function Telemetry() {
   );
 }
 
-function Selector() {
-  const scoops = useStore((s) => s.scoops);
-  const selected = useStore((s) => s.selectedScoop);
-  const setScoopFlavor = useStore((s) => s.setScoopFlavor);
-  const addScoop = useStore((s) => s.addScoop);
-  const restack = useStore((s) => s.restack);
-  const activeId = selected ?? scoops[scoops.length - 1]?.id;
-  const activeFlavor = scoops.find((s) => s.id === activeId)?.flavorId;
-  const activeIndex = scoops.findIndex((s) => s.id === activeId);
-  const full = scoops.length >= MAX_SCOOPS;
-
+/** Bottom-right: what's in the photo, the live Google rating, and catering. */
+function Aside({ caseFlavors }) {
+  const reviews = useReviews();
+  const rating = reviews?.rating ?? Number(STORE.rating);
+  const count = reviews?.count;
   return (
-    <div className="w-full md:w-[17.5rem]">
-      <p className="flex items-baseline justify-between text-[0.8125rem] text-[var(--hero-ink-dim)]">
-        <span>
-          Scoop {activeIndex + 1} of {scoops.length}
-        </span>
-        <span className="hidden md:inline">Tap a scoop to switch</span>
-      </p>
-      <ul
-        className="no-scrollbar -mx-4 mt-2 flex gap-2 overflow-x-auto px-4 md:mx-0 md:block md:border-t md:border-[var(--hero-line)] md:px-0"
-        role="group"
-        aria-label="Flavor for the selected scoop"
-      >
-        {HERO_FLAVORS.map((id) => {
-          const on = id === activeFlavor;
-          return (
-            <li key={id} className="shrink-0">
-              <button
-                type="button"
-                aria-pressed={on}
-                onClick={() => setScoopFlavor(id)}
-                className={`flex h-10 w-full items-center gap-3 whitespace-nowrap rounded-[3px] border bg-[var(--hero-panel)] px-3 text-left text-[0.875rem] backdrop-blur-md transition-colors md:h-auto md:rounded-none md:border-0 md:border-b md:border-[var(--hero-line)] md:bg-transparent md:px-0 md:py-2 md:backdrop-blur-none ${
-                  on
-                    ? 'border-[var(--hero-ink)] text-[var(--hero-ink)]'
-                    : 'border-[var(--hero-line)] text-[var(--hero-ink-dim)] hover:text-[var(--hero-ink)]'
-                }`}
-              >
-                <Swatch flavorId={id} size={12} />
-                <span>{FLAVOR_BY_ID[id].name.replace(' Sorbetto', '')}</span>
-                <span aria-hidden="true" className={`t-tele ml-auto hidden text-xs md:inline ${on ? 'text-[var(--hero-ink)]' : 'text-transparent'}`}>
-                  in scoop {activeIndex + 1}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="mt-3 flex gap-5 text-[0.875rem] text-[var(--hero-ink)]">
-        <button
-          type="button"
-          disabled={full}
-          onClick={() => addScoop(activeFlavor ?? HERO_FLAVORS[0])}
-          className="flex items-center gap-1.5 py-1 underline-offset-4 hover:underline disabled:opacity-40"
-        >
-          <Plus size={15} aria-hidden="true" />
-          {full ? 'Coupe is full' : 'Add a scoop'}
-        </button>
-        <button type="button" onClick={restack} className="flex items-center gap-1.5 py-1 underline-offset-4 hover:underline">
-          <RotateCcw size={14} aria-hidden="true" />
-          Drop again
-        </button>
+    <div className="w-full text-[0.875rem] md:w-[17.5rem]">
+      {caseFlavors.length ? (
+        <>
+          <p className="text-[0.8125rem] text-[var(--hero-ink-dim)]">In the case today</p>
+          <ul className="mt-2 border-t border-[var(--hero-line)]">
+            {caseFlavors.map((f) => (
+              <li key={f.id} className="flex items-center gap-3 border-b border-[var(--hero-line)] py-2 text-[var(--hero-ink)]">
+                <Swatch flavorId={f.id} size={12} />
+                {f.name}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+      <div className="mt-3 flex flex-col gap-2 text-[var(--hero-ink)]">
+        <a href="#reviews" className="flex items-center gap-2 underline-offset-4 hover:underline">
+          <Star size={14} aria-hidden="true" className="fill-current" />
+          {rating.toFixed(1)} on Google{count ? `, ${count.toLocaleString('en-US')} reviews` : ''}
+        </a>
+        <a href="#catering" className="underline-offset-4 hover:underline">
+          Plan catering with Naina
+        </a>
       </div>
     </div>
   );
 }
 
 /* ------------------------------------------------------------------------ */
-/* Intro: wordmark widens while the scene loads → the coupe is "printed"     */
-/* bottom-up by a scan beam → scoops fall in → type stretches into place.    */
+/* Intro: the Tifa logo drops in and lands while the page loads → the screen */
+/* slides down to reveal the store → the gelato pops in → type stretches in. */
 /* ------------------------------------------------------------------------ */
 function useIntro() {
   useEffect(() => {
@@ -142,7 +111,7 @@ function useIntro() {
     if (!html.classList.contains('tf-intro')) return undefined;
     const quick = html.classList.contains('tf-intro-quick');
     const st = useStore.getState();
-    introState.scan = 0;
+    introState.scan = 1;
     introState.dolly = 0;
     st.setScoopsDropped(false);
     st.setIntroDone(false);
@@ -153,7 +122,12 @@ function useIntro() {
     let skipRequested = false;
     const pre = document.getElementById('tf-preloader');
     const mark = pre?.querySelector('[data-mark]');
+    const edge = pre?.querySelector('[data-edge]');
 
+    const opts = { passive: true };
+    const removeSkip = () => {
+      ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((ev) => window.removeEventListener(ev, skip, opts));
+    };
     const finish = () => {
       if (done) return;
       done = true;
@@ -173,22 +147,23 @@ function useIntro() {
       }
       removeSkip();
     };
-    const skip = () => {
+    function skip() {
       skipRequested = true;
       if (tl) tl.progress(1);
       else finish();
-    };
-    const opts = { passive: true };
-    const removeSkip = () => {
-      ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((ev) => window.removeEventListener(ev, skip, opts));
-    };
-    // let the first frames settle before a stray scroll can skip it
+    }
     const armSkip = setTimeout(() => {
       ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((ev) => window.addEventListener(ev, skip, opts));
     }, 400);
 
     const run = async () => {
-      if (mark && !quick) gsap.to(mark, { fontStretch: '86%', duration: 1.1, ease: 'power2.out' });
+      // the logo falls in and lands with a little weight while the page loads
+      if (mark && !quick) {
+        gsap
+          .timeline()
+          .fromTo(mark, { yPercent: -420, opacity: 1 }, { yPercent: 0, duration: 0.7, ease: 'power3.in' })
+          .fromTo(mark, { scaleY: 0.86, scaleX: 1.08 }, { scaleY: 1, scaleX: 1, duration: 0.9, ease: 'elastic.out(1, 0.45)', transformOrigin: '50% 100%' });
+      }
       try {
         await document.fonts?.ready;
       } catch {
@@ -196,7 +171,7 @@ function useIntro() {
       }
       await new Promise((r) => setTimeout(r, 0)); // let the quality tier settle
       const tier = useStore.getState().tier;
-      await whenSceneReady(tier === 'none' ? 0 : quick ? 4000 : 8000);
+      await Promise.all([whenSceneReady(tier === 'none' ? 0 : quick ? 4000 : 8000), new Promise((r) => setTimeout(r, quick ? 0 : 1500))]);
       if (cancelled) return;
       if (skipRequested || done) {
         finish();
@@ -204,29 +179,29 @@ function useIntro() {
       }
       const S = quick ? 0.6 : 1;
       tl = gsap.timeline({ onComplete: finish });
-      if (mark && !quick) {
-        tl.to(mark, { fontStretch: '125%', duration: 0.75, ease: 'expo.inOut' })
-          .to(pre, { opacity: 0, duration: 0.5, ease: 'power2.out' }, '+=0.12')
+      if (pre && !quick) {
+        // the screen slides down and off, revealing the store behind it
+        tl.set(edge, { opacity: 1 })
+          .to(pre, { yPercent: 100, duration: 1.25, ease: 'expo.inOut' })
           .set(pre, { display: 'none' });
       } else if (pre) {
         tl.set(pre, { display: 'none' });
       }
-      const t0 = Math.max(0, tl.duration() - 0.35);
-      tl.to(introState, { scan: 1, duration: 1.9 * S, ease: 'power2.inOut' }, t0)
-        .to(introState, { dolly: 1, duration: 3.4 * S, ease: 'expo.out' }, t0)
-        .call(() => useStore.getState().setScoopsDropped(true), null, t0 + 1.3 * S)
+      const t0 = quick ? 0 : 0.35;
+      tl.to(introState, { dolly: 1, duration: 3 * S, ease: 'expo.out' }, t0)
+        .call(() => useStore.getState().setScoopsDropped(true), null, t0 + 0.85 * S)
         .fromTo(
           '[data-intro="line"]',
           { yPercent: 110, fontStretch: '62%', opacity: 1 },
-          { yPercent: 0, fontStretch: '125%', duration: 1.6 * S, ease: 'expo.out', stagger: 0.12 },
-          t0 + 0.95 * S,
+          { yPercent: 0, fontStretch: '125%', duration: 1.5 * S, ease: 'expo.out', stagger: 0.12 },
+          t0 + 0.7 * S,
         )
-        .fromTo('[data-intro="ui"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9 * S, ease: 'power3.out', stagger: 0.07 }, t0 + 1.5 * S)
-        .call(() => useStore.getState().triggerDecode(), null, t0 + 1.6 * S)
-        .fromTo('header[data-intro]', { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.8 * S, ease: 'power3.out' }, t0 + 1.8 * S)
-        .call(() => window.__lenis?.start(), null, t0 + 2.0 * S);
+        .fromTo('[data-intro="ui"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9 * S, ease: 'power3.out', stagger: 0.07 }, t0 + 1.15 * S)
+        .call(() => useStore.getState().triggerDecode(), null, t0 + 1.25 * S)
+        .fromTo('header[data-intro]', { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.8 * S, ease: 'power3.out' }, t0 + 1.35 * S)
+        .call(() => window.__lenis?.start(), null, t0 + 1.5 * S);
 
-      // design review aid: ?introAt=2.4 freezes the intro at that moment
+      // design review aid: ?introAt=1.2 freezes the intro at that moment
       const at = Number(new URLSearchParams(window.location.search).get('introAt'));
       if (at > 0) {
         removeSkip();
@@ -254,7 +229,12 @@ export default function Hero() {
   const mode = useMode();
   useIntro();
 
-  // Sticky hero: scroll progress through it drives the copy fade, the camera
+  const hero = photo('hero');
+  const items = cutouts().slice(0, 3);
+  const caseFlavors = items.map((c) => FLAVOR_BY_ID[c.id]).filter(Boolean);
+  const llama = llamaCutout();
+
+  // Sticky hero: scroll progress through it drives the copy fade, the photo
   // push-in and the melt (read by the canvas from introState.exit).
   useEffect(() => {
     let raf = 0;
@@ -266,7 +246,6 @@ export default function Hero() {
       const r = el.getBoundingClientRect();
       const span = r.height - window.innerHeight;
       const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
-      // reduced motion: no melt or camera push, the copy simply fades
       introState.exit = calm ? 0 : p;
       const o = overlay.current;
       if (o) {
@@ -289,15 +268,33 @@ export default function Hero() {
     };
   }, []);
 
-  const bg = mode === 'day' ? '#E4E8EE' : mode === 'rain' ? '#080B10' : '#0A0A0C';
-
   return (
-    <section id="top" ref={wrap} data-mode={mode} className="relative h-[175svh]" aria-label="Build your scoop">
-      <div className="sticky top-0 h-[100svh] min-h-[600px] w-full overflow-hidden" style={{ background: bg }}>
+    <section id="top" ref={wrap} data-mode="night" className="relative h-[175svh]" aria-label="Tifa Chocolate & Gelato, Walnut Creek">
+      <div className="sticky top-0 h-[100svh] min-h-[600px] w-full overflow-hidden bg-obsidian">
         <div className="absolute inset-0">
-          {near && tier !== 'none' ? <GelatoCanvas active={visible} reducedMotion={reduce} /> : null}
-          {tier === 'none' ? (
-            <div className="absolute inset-0 bg-[radial-gradient(50%_55%_at_60%_55%,rgba(226,232,240,0.08),transparent_70%)]" />
+          {near && tier !== 'none' ? (
+            <SafeBoundary
+              onError={() => {
+                introState.ready = true; // don't hold the intro for a scene that can't render
+              }}
+              fallback={
+                // eslint-disable-next-line @next/next/no-img-element
+                hero ? <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80" /> : null
+              }
+            >
+              <HeroStage hero={hero} cutouts={items} llama={llama} active={visible} reducedMotion={reduce} />
+            </SafeBoundary>
+          ) : null}
+          {tier === 'none' && hero ? (
+            // no WebGL: the same photo as a plain image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80" />
+          ) : null}
+          {MEDIA.showPlaceholders && (!hero || !items.length) ? (
+            <div className="t-tele pointer-events-none absolute right-6 top-1/2 max-w-[18rem] -translate-y-1/2 text-[0.72rem] leading-relaxed text-chrome-faint md:right-[24%]">
+              {!hero ? <p>Add hero photo: public/photos/hero.jpg</p> : null}
+              {!items.length ? <p className="mt-2">Add 1 to 3 gelato cutouts (transparent PNG): public/photos/cutouts/</p> : null}
+            </div>
           ) : null}
         </div>
 
@@ -305,9 +302,9 @@ export default function Hero() {
           ref={overlay}
           className="pointer-events-none relative z-10 mx-auto flex h-full max-w-[1440px] flex-col px-4 pb-6 pt-20 will-change-transform md:px-8 md:pb-8 md:pt-24"
         >
-          {/* top row: headline (left) · live store telemetry (right) */}
+          {/* top row: headline (left) · live store facts (right) */}
           <div className="flex items-start justify-between gap-10">
-            <h1 className="t-display text-[var(--hero-ink)]" data-warp>
+            <h1 className="t-display text-chrome" data-warp>
               <span className="block overflow-hidden pb-[0.08em]">
                 <span className="block" data-intro="line">
                   Made this morning
@@ -324,36 +321,29 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* bottom row: copy + actions (left) · scoop builder (right) */}
+          {/* bottom row: copy + actions (left) · case, rating, catering (right) */}
           <div className="mt-auto flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
-            <div className="hidden md:block md:max-w-[24rem]">
-              <p className="t-lede text-[var(--hero-ink-dim)]" data-intro="ui">
-                {STORE.flavorCount} flavors churned in-house every day, with artisan chocolate and Groundwork coffee. Drag the coupe to turn it.
+            <div className="md:max-w-[26rem]">
+              <p className="t-lede hidden text-chrome-dim md:block" data-intro="ui">
+                {STORE.flavorCount} flavors of gelato and sorbetto made in-house every day, artisan chocolates, and Groundwork coffee. Next to the
+                Lesher Center.
               </p>
               <div className="pointer-events-auto mt-6 flex flex-wrap gap-3" data-intro="ui">
                 <a href="#game" className="btn btn-primary" data-magnetic>
                   Find my flavor
                 </a>
                 <a href="#flavors" className="btn btn-ghost" data-magnetic>
-                  Today&apos;s menu
+                  Today&apos;s flavors
                 </a>
               </div>
             </div>
-            <div className="pointer-events-auto" data-intro="ui">
-              <Selector />
-            </div>
-            <div className="pointer-events-auto flex gap-3 md:hidden" data-intro="ui">
-              <a href="#game" className="btn btn-primary flex-1 justify-center">
-                Find my flavor
-              </a>
-              <a href="#flavors" className="btn btn-ghost flex-1 justify-center">
-                Today&apos;s menu
-              </a>
+            <div className="pointer-events-auto hidden md:block" data-intro="ui">
+              <Aside caseFlavors={caseFlavors} />
             </div>
           </div>
 
           {/* keyboard / screen-reader route to the hidden LaMa */}
-          <button type="button" className="sr-only pointer-events-auto focus:not-sr-only focus:mt-2 focus:text-[var(--hero-ink)]" onClick={openPerk}>
+          <button type="button" className="sr-only pointer-events-auto focus:not-sr-only focus:mt-2 focus:text-chrome" onClick={openPerk}>
             Find the hidden LaMa
           </button>
         </div>

@@ -2,13 +2,12 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Environment, Lightformer } from '@react-three/drei';
 import { EffectComposer, Bloom, ShockWave, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { useStore } from '@/lib/store';
 import { TIER } from '@/lib/quality';
 import { STREAM_COLORS } from '@/lib/matcher';
-import GelatoScoop from './GelatoScoop';
+import { MEDIA, optimized } from '@/content/media';
 
 /**
  * Particle collider. Every particle's position is evaluated on the GPU from
@@ -269,40 +268,119 @@ function EnergyCore() {
   );
 }
 
-function RevealScoop() {
+/**
+ * The match "pops" out of the collision as a real photo:
+ *   - a cutout (transparent PNG named after the flavor) if one exists,
+ *   - otherwise the flavor's photo in a soft-edged disc,
+ *   - otherwise a quiet orb in the flavor's colors (never a fake gelato render).
+ */
+const discFragment = /* glsl */ `
+uniform sampler2D uTex;
+uniform float uHasTex;
+uniform float uCutout;
+uniform float uImgAspect;
+uniform vec3 uA;
+uniform vec3 uB;
+uniform float uTime;
+varying vec2 vUv;
+void main() {
+  vec2 p = vUv - 0.5;
+  float r = length(p) * 2.0;
+  if (uHasTex > 0.5 && uCutout > 0.5) {
+    vec2 uv = vUv;
+    if (uImgAspect > 1.0) uv.y = (uv.y - 0.5) * uImgAspect + 0.5; else uv.x = (uv.x - 0.5) / uImgAspect + 0.5;
+    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) discard;
+    vec4 c = texture2D(uTex, uv);
+    if (c.a < 0.02) discard;
+    gl_FragColor = c;
+    return;
+  }
+  float edge = 1.0 - smoothstep(0.96, 1.0, r);
+  if (edge <= 0.0) discard;
+  vec3 col;
+  if (uHasTex > 0.5) {
+    vec2 uv = vUv;
+    if (uImgAspect > 1.0) uv.x = (uv.x - 0.5) / uImgAspect + 0.5; else uv.y = (uv.y - 0.5) * uImgAspect + 0.5;
+    col = texture2D(uTex, uv).rgb;
+  } else {
+    float n = sin(p.x * 9.0 + uTime) * sin(p.y * 7.0 - uTime * 0.7) * 0.5 + 0.5;
+    col = mix(uA, uB, smoothstep(0.0, 1.0, n * (1.0 - r * 0.6)));
+  }
+  float rim = smoothstep(0.86, 0.98, r) * edge;
+  col += vec3(1.0, 0.97, 0.88) * rim * 0.35;
+  gl_FragColor = vec4(col, edge);
+}`;
+
+function RevealPhoto({ src, isCutout, look }) {
+  const tex = useMemo(() => {
+    if (!src) return null;
+    const t = new THREE.TextureLoader().load(src, (tt) => {
+      mat.uniforms.uImgAspect.value = tt.image.width / tt.image.height;
+      mat.uniforms.uHasTex.value = 1;
+    });
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  }, [src]); // eslint-disable-line react-hooks/exhaustive-deps
+  const mat = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+        fragmentShader: discFragment,
+        transparent: true,
+        depthWrite: false,
+        toneMapped: false,
+        uniforms: {
+          uTex: { value: null },
+          uHasTex: { value: 0 },
+          uCutout: { value: isCutout ? 1 : 0 },
+          uImgAspect: { value: 1 },
+          uA: { value: new THREE.Color(look.colorA) },
+          uB: { value: new THREE.Color(look.colorB) },
+          uTime: { value: 0 },
+        },
+      }),
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  useEffect(() => {
+    mat.uniforms.uTex.value = tex;
+    return () => tex?.dispose();
+  }, [tex, mat]);
+  useFrame((state) => {
+    mat.uniforms.uTime.value = state.clock.elapsedTime;
+  });
+  return (
+    <mesh material={mat}>
+      <planeGeometry args={[2.6, 2.6]} />
+    </mesh>
+  );
+}
+
+function RevealScoop({ photos }) {
   const phase = useStore((s) => s.quizPhase);
   const result = useStore((s) => s.quizResult);
   const group = useRef(null);
   const s = useRef({ x: 0, v: 0 });
-  const scoop = useRef(null);
   const shown = phase === 'revealed' && result;
-
-  useEffect(() => {
-    if (shown) scoop.current?.impact(0.9);
-  }, [shown]);
+  const id = result?.flavor.id;
+  const cut = id ? photos.cutouts[id] : null;
+  const src = cut ?? (id ? photos.flavors[id] : null);
 
   useFrame((state, rawDelta) => {
     const dt = Math.min(rawDelta, 0.05);
     const target = shown ? 1 : 0;
-    s.current.v += ((target - s.current.x) * 140 - s.current.v * 12) * dt;
+    // springy pop with a little overshoot
+    s.current.v += ((target - s.current.x) * 160 - s.current.v * 11) * dt;
     s.current.x += s.current.v * dt;
     const k = Math.max(0, s.current.x);
-    group.current.scale.setScalar(k);
+    group.current.scale.set(k * (1 + (k - 1) * 0.6), k * (1 - (k - 1) * 0.4), 1);
     group.current.visible = k > 0.01;
-    group.current.rotation.y += dt * 0.5;
-    group.current.position.y = 0.1 + Math.sin(state.clock.elapsedTime * 1.2) * 0.06;
+    group.current.position.y = 0.15 + Math.sin(state.clock.elapsedTime * 1.2) * 0.06;
+    group.current.quaternion.copy(state.camera.quaternion); // always faces the viewer
   });
 
   return (
     <group ref={group} visible={false}>
-      {result ? <GelatoScoop ref={scoop} key={result.flavor.id} flavorId={result.flavor.id} radius={1.1} detail={64} position={[0, -0.2, 0]} /> : null}
-      <mesh position={[0, -0.86, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.25, 0.012, 8, 96]} />
-        <meshBasicMaterial color="#FF9EAA" toneMapped={false} />
-      </mesh>
-      <spotLight position={[3, 5, 4]} angle={0.45} penumbra={0.8} intensity={80} color="#FFF4EA" />
-      <pointLight position={[-3, 1.5, -2]} intensity={7} color="#50E3C2" />
-      <pointLight position={[2.5, 0, -2.5]} intensity={7} color="#FF9EAA" />
+      {result ? <RevealPhoto key={id} src={src} isCutout={Boolean(cut)} look={result.flavor.look} /> : null}
     </group>
   );
 }
@@ -315,6 +393,11 @@ function Shock() {
   }, [phase]);
   return <ShockWave ref={ref} position={[0, 0, 0]} speed={1.4} maxRadius={0.9} waveSize={0.22} amplitude={0.06} />;
 }
+
+const REVEAL_PHOTOS = {
+  cutouts: Object.fromEntries(MEDIA.cutouts.map((c) => [c.id, optimized(c.src, 1080)])),
+  flavors: Object.fromEntries(Object.entries(MEDIA.flavors).map(([k, v]) => [k, optimized(v, 1080)])),
+};
 
 export default function ParticleCollider({ active = true }) {
   const tier = useStore((s) => s.tier);
@@ -330,18 +413,12 @@ export default function ParticleCollider({ active = true }) {
     >
       <color attach="background" args={['#0A0A0C']} />
       <ambientLight intensity={0.25} />
-      <Environment resolution={128} frames={1}>
-        <Lightformer form="rect" intensity={3} position={[0, 5, 2]} rotation-x={Math.PI / 2} scale={[6, 3, 1]} color="#FFF7D6" />
-        <Lightformer form="rect" intensity={1.6} position={[-5, 1, 0]} rotation-y={Math.PI / 2} scale={[0.5, 6, 1]} color="#50E3C2" />
-        <Lightformer form="rect" intensity={1.6} position={[5, 1, 0]} rotation-y={-Math.PI / 2} scale={[0.5, 6, 1]} color="#FF9EAA" />
-        <Lightformer form="ring" intensity={2} position={[0, 1, 6]} scale={3} color="#FFFFFF" />
-      </Environment>
       <Framing />
       <EnergyCore />
       <Vortex count={t.vortex} />
-      <RevealScoop />
+      <RevealScoop photos={REVEAL_PHOTOS} />
       <EffectComposer multisampling={0}>
-        <Bloom mipmapBlur intensity={1.25} luminanceThreshold={0.6} radius={0.75} />
+        <Bloom mipmapBlur intensity={1.25} luminanceThreshold={0.85} radius={0.75} />
         <Shock />
         <Vignette offset={0.25} darkness={0.7} />
       </EffectComposer>
