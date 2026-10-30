@@ -1,9 +1,10 @@
 {
-  "generatedAt": "2026-10-30T03:14:28.337Z",
+  "generatedAt": "2026-10-30T13:25:56.426Z",
   "showPlaceholders": true,
   "brand": {
     "logo": null,
-    "logoWhite": null
+    "logoWhite": null,
+    "colors": null
   },
   "photos": {},
   "cutouts": [],

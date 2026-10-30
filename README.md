@@ -1,10 +1,10 @@
 # Tifa Chocolate & Gelato — Walnut Creek
 
-The website for Tifa Chocolate & Gelato at 1545 Locust St, Walnut Creek: real store photography and the real menu, with cinematic motion on top.
+The website for Tifa Chocolate & Gelato at 1545 Locust St, Walnut Creek: the store's green and white, its own logo, real store photography and the real menu, with cinematic motion on top.
 
 **What a visitor sees**
-- **Arrival:** the Tifa logo drops in and lands while the page loads, then the whole screen slides down to reveal the store. Real gelato cutouts drop in, bounce and pop (tap them to pop again), the headline stretches into place, and live store facts (address, weather, local time, open now) decode in the corner.
-- **Leaving the opening screen:** the photo melts away in dark drips into the next section.
+- **Arrival:** the Tifa logo drops in on Tifa green and lands while the page loads, then the whole screen slides down to reveal the store. Real gelato cutouts drop in, bounce and pop (tap them to pop again), the headline stretches into place, and live store facts (address, weather, local time, open now) decode in the corner.
+- **Leaving the opening screen:** the photo melts away in deep-green drips into the next section.
 - **Inside the shop:** big real photos glide sideways as you scroll.
 - **Taste Twins:** all 27 menu flavors mapped by taste; pick one to see its four closest matches (with its photo once added).
 - **Find my flavor:** four questions charge a particle collider; the match pops out as a real photo, with sound and a shareable passport.
@@ -13,7 +13,10 @@ The website for Tifa Chocolate & Gelato at 1545 Locust St, Walnut Creek: real st
 - Live Walnut Creek weather tints the opening photo and adds rain on the glass when it's raining.
 
 ## Adding photos and the logo
-See **[docs/PHOTOS.md](docs/PHOTOS.md)**. In short: drop files into `public/brand/` and `public/photos/` with the listed names, commit, and Vercel rebuilds. Empty slots show labelled placeholders on preview links and nothing in production.
+See **[docs/PHOTOS.md](docs/PHOTOS.md)**. In short: drop files into `public/brand/` and `public/photos/` with the listed names, commit, and Vercel rebuilds. Empty slots show labelled placeholders on preview links and nothing in production. The site's green is sampled from the logo file on every build.
+
+## Theme
+Green and white, like the store. Tokens live in `app/globals.css` (`paper`, `ink`, `green`, `green-ink`, `leaf`); a section with `on-green` flips to deep Tifa green with white type. Canvas and chart colors are in `lib/theme.js`.
 
 ## Menu
 `lib/flavors.js` holds the store's menu exactly as on the original site (names, families, tags, allergen flags). Taste profiles for Taste Twins and the quiz are derived from the store's own tags. To change the menu, edit `STORE_MENU` there and run `npm run check`.
@@ -83,7 +86,7 @@ lib/  flavors (menu) · matcher (quiz) · config (store facts) · store · weath
 - Any key, click, scroll or touch skips the intro.
 
 ## Before launch
-- [ ] Add the logo and photos (docs/PHOTOS.md).
+- [ ] Add the official logo and photos (docs/PHOTOS.md).
 - [ ] Confirm opening hours (`lib/config.js` says 11 AM; one online listing says 10 AM).
 - [ ] Set `GOOGLE_PLACES_API_KEY` for live reviews.
 - [ ] Set `CATERING_EMAIL_TO` + `RESEND_API_KEY` so catering reaches Naina.

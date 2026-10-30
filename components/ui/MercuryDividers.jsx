@@ -14,7 +14,7 @@ import { pointerState, scrollState } from '@/lib/scrollState';
  * Surface = height field of slow swell + up to 12 cursor ripples (spawned with
  * strength ∝ cursor speed) + a scroll-velocity chop. Normals come from the
  * analytic gradient; shading reflects into a procedural chrome studio with
- * rose/mint side lights, so it reads as polished liquid metal.
+ * green side lights, so it reads as a ribbon of glossy Tifa-green liquid.
  */
 
 const Ctx = createContext(null);
@@ -61,12 +61,12 @@ vec3 field(vec2 p) {
 
 vec3 studio(vec3 r) {
   float y = r.y * 0.5 + 0.5;
-  vec3 c = mix(vec3(0.015, 0.015, 0.02), vec3(0.38, 0.41, 0.46), smoothstep(0.3, 1.0, y));
+  vec3 c = mix(vec3(0.02, 0.13, 0.08), vec3(0.14, 0.6, 0.38), smoothstep(0.3, 1.0, y));
   c += vec3(1.8) * smoothstep(0.88, 0.9, y) * (1.0 - smoothstep(0.92, 0.95, y)); // softbox band
   c += vec3(0.7) * smoothstep(0.66, 0.67, y) * (1.0 - smoothstep(0.68, 0.70, y));
-  c += vec3(0.25, 0.27, 0.3) * smoothstep(0.2, 0.0, y); // floor bounce
-  c += vec3(1.0, 0.62, 0.67) * pow(max(r.x, 0.0), 6.0) * 1.4;   // rose gold rim
-  c += vec3(0.31, 0.89, 0.76) * pow(max(-r.x, 0.0), 6.0) * 1.2; // mint rim
+  c += vec3(0.06, 0.22, 0.14) * smoothstep(0.2, 0.0, y); // floor bounce
+  c += vec3(0.5, 0.88, 0.68) * pow(max(r.x, 0.0), 6.0) * 1.3;   // leaf rim
+  c += vec3(1.0, 0.97, 0.9) * pow(max(-r.x, 0.0), 6.0) * 0.9;  // cream rim
   return c;
 }
 
@@ -91,7 +91,7 @@ void main() {
   vec3 r = reflect(-v, n);
   vec3 col = studio(r);
   float fres = pow(1.0 - max(dot(n, v), 0.0), 3.0);
-  col = mix(col, vec3(0.9, 0.93, 0.97), fres * 0.35);
+  col = mix(col, vec3(0.86, 0.97, 0.91), fres * 0.35);
   col *= 0.9 + 0.1 * sin(p.x * 0.004 + uTime * 0.2);
   gl_FragColor = vec4(col * alpha, alpha);
 }

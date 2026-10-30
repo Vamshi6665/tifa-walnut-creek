@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { CloudRain, Moon, Sun, Menu, X } from 'lucide-react';
 import { useStore, useMode } from '@/lib/store';
-import { LOGO_WHITE } from '@/content/media';
+import Logo from './Logo';
 
 const LINKS = [
   { href: '#flavors', label: 'Flavors' },
@@ -42,21 +42,14 @@ export default function Nav() {
   return (
     <header
       data-intro="nav"
-      data-mode="night"
+      data-mode={onHero ? 'night' : 'day'}
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-500 ${
-        scrolled ? 'border-b border-line bg-obsidian/75 backdrop-blur-xl' : 'border-b border-transparent'
+        scrolled ? 'border-b border-[rgb(12_42_28/0.1)] bg-white/95 backdrop-blur-xl' : 'border-b border-transparent bg-transparent'
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-[1440px] items-center gap-6 px-4 md:px-8" aria-label="Main">
-        <a href="#top" className="flex items-center text-chrome" data-magnetic aria-label="Tifa Chocolate & Gelato, Walnut Creek home">
-          {LOGO_WHITE ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={LOGO_WHITE} alt="" className="h-8 w-auto" />
-          ) : (
-            <span className="font-display text-[1.6rem] font-[350] leading-none tracking-[-0.04em] [font-stretch:125%]">
-              tifa<span className="text-rose">.</span>
-            </span>
-          )}
+        <a href="#top" className="flex items-center text-[var(--hero-ink)]" data-magnetic aria-label="Tifa Chocolate & Gelato, Walnut Creek home">
+          <Logo on={onHero ? 'dark' : 'light'} alt="" className="h-9 w-auto" fallbackClassName="whitespace-nowrap text-[0.95rem] sm:text-[1.05rem]" />
         </a>
         <ul className="ml-6 hidden items-center gap-1 lg:flex">
           {LINKS.map((l) => (
@@ -78,7 +71,7 @@ export default function Nav() {
             aria-label={`Lighting: ${weatherText}. Change lighting preview`}
             className="t-tele flex h-10 items-center gap-2 rounded-[3px] border border-[var(--hero-line)] px-3 text-[0.75rem] text-[var(--hero-ink)] transition-colors hover:border-[var(--hero-ink)]"
           >
-            <Icon size={15} strokeWidth={2} className={mode === 'rain' ? 'text-mint' : mode === 'night' ? 'text-rose' : ''} />
+            <Icon size={15} strokeWidth={2} className={onHero ? 'text-leaf' : 'text-green-ink'} />
             <span className="hidden sm:inline">{weatherText}</span>
           </button>
           <a href="#game" className="btn btn-primary hidden !min-h-10 !px-4 text-sm md:inline-flex" data-magnetic>
@@ -97,11 +90,11 @@ export default function Nav() {
         </div>
       </nav>
       {open ? (
-        <div id="mobile-menu" className="holo mx-4 mb-4 rounded-md p-3 lg:hidden" data-mode="night">
+        <div id="mobile-menu" className="holo mx-4 mb-4 rounded-md p-3 lg:hidden" data-mode="day">
           <ul>
             {LINKS.map((l) => (
               <li key={l.href}>
-                <a href={l.href} onClick={() => setOpen(false)} className="block rounded-[3px] px-4 py-3 text-lg font-medium text-chrome hover:bg-white/5">
+                <a href={l.href} onClick={() => setOpen(false)} className="block rounded-[3px] px-4 py-3 text-lg font-medium text-ink hover:bg-ink/5">
                   {l.label}
                 </a>
               </li>

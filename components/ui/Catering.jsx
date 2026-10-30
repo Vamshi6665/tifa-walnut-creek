@@ -10,15 +10,15 @@ const TYPES = ['Birthday', 'Wedding', 'Corporate / office', 'School or team', 'O
 function Field({ label, children, hint }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-chrome-dim">{label}</span>
+      <span className="text-sm font-medium text-ink-dim">{label}</span>
       {children}
-      {hint ? <span className="mt-1 block text-xs text-chrome-faint">{hint}</span> : null}
+      {hint ? <span className="mt-1 block text-xs text-ink-faint">{hint}</span> : null}
     </label>
   );
 }
 
 const input =
-  'mt-1.5 h-12 w-full rounded-[3px] border border-line bg-obsidian-2 px-3.5 text-[0.975rem] text-chrome placeholder:text-chrome-faint focus:border-chrome';
+  'mt-1.5 h-12 w-full rounded-[3px] border border-line bg-paper-2 px-3.5 text-[0.975rem] text-ink placeholder:text-ink-faint focus:border-ink';
 
 function ContactOptions() {
   return (
@@ -69,13 +69,13 @@ export default function Catering() {
   };
 
   return (
-    <section id="catering" className="relative scroll-mt-16 bg-obsidian py-24 md:py-32" aria-labelledby="catering-title">
+    <section id="catering" className="relative scroll-mt-16 bg-paper py-24 md:py-32" aria-labelledby="catering-title">
       <div className="mx-auto grid max-w-[1440px] gap-10 px-4 md:px-8 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <h2 id="catering-title" className="t-h2" data-warp>
             Catering, planned with Naina.
           </h2>
-          <p className="t-body mt-6 text-chrome-dim">
+          <p className="t-body mt-6 text-ink-dim">
             Gelato, chocolates and coffee for birthdays, weddings, office treats and school events. Catering for Tifa Walnut Creek is handled
             right here on Locust Street by owner Naina Balupari. Tell us about your event and she&apos;ll get back to you.
           </p>
@@ -88,16 +88,16 @@ export default function Catering() {
           ) : !enabled ? (
             <div className="rounded-lg border border-line p-6 md:p-8">
               <h3 className="t-h3">Talk to us about your event</h3>
-              <p className="mt-2 text-chrome-dim">Call, message or stop by and ask for Naina.</p>
+              <p className="mt-2 text-ink-dim">Call, message or stop by and ask for Naina.</p>
               <div className="mt-6">
                 <ContactOptions />
               </div>
             </div>
           ) : state.status === 'sent' ? (
-            <div className="rounded-lg border border-mint/30 p-6 md:p-8" role="status">
-              <Check className="text-mint" aria-hidden="true" />
+            <div className="rounded-lg border border-green/30 p-6 md:p-8" role="status">
+              <Check className="text-green-ink" aria-hidden="true" />
               <h3 className="t-h3 mt-4">Sent to Naina.</h3>
-              <p className="mt-2 text-chrome-dim">
+              <p className="mt-2 text-ink-dim">
                 Thanks, {form.name.split(' ')[0]}. She&apos;ll reply to {form.email || form.phone}. For anything urgent, call {STORE.phone}.
               </p>
             </div>
@@ -138,12 +138,12 @@ export default function Catering() {
                 <button type="submit" className="btn btn-primary" disabled={state.status === 'sending'} data-magnetic>
                   {state.status === 'sending' ? 'Sending…' : 'Send to Naina'}
                 </button>
-                <a href={STORE.phoneHref} className="text-sm text-chrome-dim underline-offset-4 hover:underline">
+                <a href={STORE.phoneHref} className="text-sm text-ink-dim underline-offset-4 hover:underline">
                   Or call {STORE.phone}
                 </a>
               </div>
               {state.status === 'error' ? (
-                <p className="text-sm text-rose sm:col-span-2" role="alert">
+                <p className="text-sm text-green-ink sm:col-span-2" role="alert">
                   {state.error}
                 </p>
               ) : null}

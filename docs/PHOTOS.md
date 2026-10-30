@@ -9,7 +9,9 @@ slots show a labelled placeholder on preview links and stay quiet in production.
 | File | Used for |
 |---|---|
 | `logo.png` or `logo.svg` | the official Tifa logo, transparent background |
-| `logo-white.png` or `.svg` | white version for the dark site (nav, intro drop, footer). If missing, `logo` is used |
+| `logo-white.png` or `.svg` | white version for the green parts of the site (intro drop on Tifa green, nav over the photo, footer). If missing, the color logo is shown on a small white tile there |
+
+The site's green is sampled from `logo.png` when the site builds, so buttons, links and accents match the real logo exactly. Until a logo file is added, the store name is shown as plain text; nothing is drawn in its place.
 
 ## Store photos — `public/photos/`
 Landscape, at least 2000 px wide, originals rather than screenshots.

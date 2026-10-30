@@ -141,7 +141,7 @@ function Vortex({ count }) {
           uBurst: { value: -1 },
           uPixel: { value: 600 },
           uStream: { value: new THREE.Vector4(-1, -1, -1, -1) },
-          uColors: { value: ['#E2E8F0', ...STREAM_COLORS].map((c) => new THREE.Color(c)) },
+          uColors: { value: ['#FFFFFF', ...STREAM_COLORS].map((c) => new THREE.Color(c)) },
         },
       }),
     [],
@@ -228,7 +228,7 @@ void main() {
   float pulse = 0.85 + 0.15 * sin(uTime * 3.0);
   float core = exp(-d * d * (14.0 - uCharge * 6.0)) * (0.35 + uCharge * 1.1) * pulse;
   float halo = exp(-d * 3.2) * 0.25 * (0.4 + uCharge);
-  vec3 col = mix(vec3(1.0, 0.62, 0.67), vec3(0.31, 0.89, 0.76), 0.5 + 0.5 * sin(uTime * 0.7));
+  vec3 col = mix(vec3(0.5, 0.88, 0.68), vec3(0.97, 0.91, 0.76), 0.5 + 0.5 * sin(uTime * 0.7));
   col = mix(col, vec3(1.0, 0.97, 0.84), core);
   float a = (core + halo) * (1.0 + uFlare * 4.0) * (1.0 - smoothstep(0.65, 1.0, d));
   gl_FragColor = vec4(col * (1.0 + uFlare * 3.0), a);
@@ -411,7 +411,7 @@ export default function ParticleCollider({ active = true }) {
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
       aria-hidden="true"
     >
-      <color attach="background" args={['#0A0A0C']} />
+      <color attach="background" args={['#0A2D1E']} />
       <ambientLight intensity={0.25} />
       <Framing />
       <EnergyCore />

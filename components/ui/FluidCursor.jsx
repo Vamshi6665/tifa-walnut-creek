@@ -111,21 +111,21 @@ export default function FluidCursor() {
       <div
         ref={dot}
         aria-hidden="true"
-        className="pointer-events-none fixed left-0 top-0 z-[100] -ml-[3px] -mt-[3px] h-[6px] w-[6px] rounded-full bg-rose opacity-0 mix-blend-difference"
+        className="pointer-events-none fixed left-0 top-0 z-[100] -ml-[3px] -mt-[3px] h-[6px] w-[6px] rounded-full bg-white opacity-0 mix-blend-difference"
       />
       <div ref={ring} aria-hidden="true" className="fluid-ring pointer-events-none fixed left-0 top-0 z-[99] opacity-0" />
       <style>{`
         .fluid-ring {
-          border: 1.5px solid rgb(226 232 240 / 0.7);
+          border: 1.5px solid rgb(255 255 255 / 0.75);
           transform-origin: center;
           transition: border-color .25s, background-color .25s, opacity .3s;
           mix-blend-mode: difference;
         }
-        .fluid-ring.is-down { background: rgb(255 158 170 / .25); }
+        .fluid-ring.is-down { background: rgb(255 255 255 / .25); }
         .fluid-ring[data-mode='grab-scoop'], .fluid-ring[data-mode='llama'], .fluid-ring[data-mode='node'] { mix-blend-mode: normal; }
-        .fluid-ring[data-mode='grab-scoop'] { border-color: #FF9EAA; background: rgb(255 158 170 / .12); }
-        .fluid-ring[data-mode='llama'] { border-color: #50E3C2; background: rgb(80 227 194 / .18); }
-        .fluid-ring[data-mode='node'] { border-color: #FFF7D6; }
+        .fluid-ring[data-mode='grab-scoop'] { border-color: #1F9A62; background: rgb(31 154 98 / .14); }
+        .fluid-ring[data-mode='llama'] { border-color: #7FE0AE; background: rgb(127 224 174 / .2); }
+        .fluid-ring[data-mode='node'] { border-color: #FFFFFF; }
       `}</style>
     </>
   );

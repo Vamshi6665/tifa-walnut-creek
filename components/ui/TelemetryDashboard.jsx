@@ -59,12 +59,12 @@ function Stat({ label, value, suffix = '', hero = false, sub }) {
   const n = useAnimatedNumber(typeof value === 'number' ? value : null);
   return (
     <InertiaCard className="hud rounded-md p-5" max={6}>
-      <p className="text-sm font-medium text-chrome-dim">{label}</p>
-      <p className={`t-tele mt-2 font-medium tracking-tight text-chrome ${hero ? 'text-[clamp(2.75rem,5vw,4rem)] leading-none' : 'text-[clamp(1.75rem,3vw,2.5rem)] leading-none'}`}>
+      <p className="text-sm font-medium text-ink-dim">{label}</p>
+      <p className={`t-tele mt-2 font-medium tracking-tight text-ink ${hero ? 'text-[clamp(2.75rem,5vw,4rem)] leading-none' : 'text-[clamp(1.75rem,3vw,2.5rem)] leading-none'}`}>
         {typeof value === 'number' ? n.toLocaleString('en-US') : value}
         {suffix}
       </p>
-      {sub ? <p className="mt-2 text-sm text-chrome-faint">{sub}</p> : null}
+      {sub ? <p className="mt-2 text-sm text-ink-faint">{sub}</p> : null}
     </InertiaCard>
   );
 }
@@ -72,8 +72,8 @@ function Stat({ label, value, suffix = '', hero = false, sub }) {
 function Panel({ title, sub, children, className = '' }) {
   return (
     <div className={`hud rounded-md p-5 md:p-6 ${className}`}>
-      <h3 className="font-display text-lg font-medium text-chrome">{title}</h3>
-      {sub ? <p className="mt-0.5 text-sm text-chrome-dim">{sub}</p> : null}
+      <h3 className="font-display text-lg font-medium text-ink">{title}</h3>
+      {sub ? <p className="mt-0.5 text-sm text-ink-dim">{sub}</p> : null}
       <div className="mt-5">{children}</div>
     </div>
   );
@@ -146,13 +146,13 @@ export default function TelemetryDashboard() {
   );
 
   return (
-    <section id="dashboard" ref={section} className="relative scroll-mt-16 bg-obsidian pb-24 pt-8 md:pb-32" aria-labelledby="dash-title">
+    <section id="dashboard" ref={section} className="on-green relative scroll-mt-16 bg-paper pb-24 pt-16 md:pb-32" aria-labelledby="dash-title">
       <div className="mx-auto max-w-[1440px] px-4 md:px-8">
         <div className="grid gap-6 md:grid-cols-12 md:items-end">
           <h2 id="dash-title" className="t-h2 md:col-span-7" data-warp>
             Mission control.
           </h2>
-          <p className="t-body text-chrome-dim md:col-span-5">
+          <p className="t-body text-ink-dim md:col-span-5">
             Live numbers from every flavor quiz taken on this site. No names, no locations, just what Walnut Creek is craving.
           </p>
         </div>
@@ -160,20 +160,20 @@ export default function TelemetryDashboard() {
         {/* one control row, above everything it scopes */}
         <div className="mt-10 flex flex-wrap items-center gap-3">
           {d?.sample ? (
-            <p className="rounded-[3px] border border-vanilla/40 bg-vanilla/10 px-4 py-2 text-sm font-medium text-vanilla">
+            <p className="rounded-[3px] border border-ink/40 bg-ink/10 px-4 py-2 text-sm font-medium text-ink">
               Sample data. Connect Upstash Redis to show live numbers.
             </p>
           ) : (
-            <p className="flex items-center gap-2 rounded-[3px] border border-mint/30 px-4 py-2 text-sm font-medium text-chrome">
+            <p className="flex items-center gap-2 rounded-[3px] border border-green/30 px-4 py-2 text-sm font-medium text-ink">
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-60 motion-reduce:hidden" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green opacity-60 motion-reduce:hidden" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green" />
               </span>
               Live
             </p>
           )}
           {d ? (
-            <p className="t-tele text-sm text-chrome-dim">
+            <p className="t-tele text-sm text-ink-dim">
               Updated {new Date(d.generatedAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' })}
             </p>
           ) : null}
@@ -189,7 +189,7 @@ export default function TelemetryDashboard() {
           </div>
         </div>
         {error ? (
-          <p className="mt-3 text-sm text-rose" role="alert">
+          <p className="mt-3 text-sm text-green-ink" role="alert">
             {error}
           </p>
         ) : null}
@@ -199,15 +199,15 @@ export default function TelemetryDashboard() {
           <div ref={globe} className="hud relative min-h-[340px] overflow-hidden rounded-md lg:col-span-5 lg:row-span-2">
             {globeNear && tier !== 'none' ? <SafeBoundary><HoloTerrain active={globeVisible} reducedMotion={reduce} labels={mapLabels} /></SafeBoundary> : null}
             <div ref={storeLabel} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 opacity-0">
-              <span className="t-tele block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md border border-rose/40 bg-obsidian/80 px-2 py-1 text-[0.7rem] text-chrome">
+              <span className="t-tele block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md border border-green/40 bg-paper/80 px-2 py-1 text-[0.7rem] text-ink">
                 1545 Locust St
               </span>
             </div>
             <div ref={diabloLabel} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 opacity-0">
-              <span className="t-tele block -translate-x-1/2 -translate-y-full whitespace-nowrap text-[0.7rem] text-vanilla/80">Mt. Diablo</span>
+              <span className="t-tele block -translate-x-1/2 -translate-y-full whitespace-nowrap text-[0.7rem] text-ink/80">Mt. Diablo</span>
             </div>
             <div className="pointer-events-none absolute inset-x-5 bottom-4 flex items-end justify-between gap-4">
-              <p className="text-sm text-chrome-dim">Downtown Walnut Creek. The beacon pulses each time a quiz is recorded.</p>
+              <p className="text-sm text-ink-dim">Downtown Walnut Creek. The beacon pulses each time a quiz is recorded.</p>
             </div>
           </div>
 
@@ -221,14 +221,14 @@ export default function TelemetryDashboard() {
           {table && d ? (
             <div className="hud overflow-x-auto rounded-md p-5 lg:col-span-7">
               <table className="w-full min-w-[480px] text-left text-sm">
-                <caption className="mb-3 text-left font-display text-lg font-medium text-chrome">All dashboard numbers</caption>
-                <thead className="text-chrome-dim">
+                <caption className="mb-3 text-left font-display text-lg font-medium text-ink">All dashboard numbers</caption>
+                <thead className="text-ink-dim">
                   <tr>
                     <th scope="col" className="py-2 font-semibold">Metric</th>
                     <th scope="col" className="py-2 text-right font-semibold">Value</th>
                   </tr>
                 </thead>
-                <tbody className="t-tele text-chrome">
+                <tbody className="t-tele text-ink">
                   {d.hours.map((v, h) => (
                     <tr key={`h${h}`} className="border-t border-line">
                       <td className="py-1.5 font-sans">Quizzes, {hourLabel(h)} hour</td>
@@ -273,7 +273,7 @@ export default function TelemetryDashboard() {
                     rows={flavorRows}
                     renderLabel={(r) => (
                       <>
-                        {r.id ? <Swatch flavorId={r.id} size={12} /> : <span className="inline-block h-3 w-3 rounded-full bg-white/15" aria-hidden="true" />}
+                        {r.id ? <Swatch flavorId={r.id} size={12} /> : <span className="inline-block h-3 w-3 rounded-full bg-ink/15" aria-hidden="true" />}
                         <span className="truncate">{r.label}</span>
                       </>
                     )}
@@ -281,7 +281,7 @@ export default function TelemetryDashboard() {
                 ) : null}
               </Panel>
               <Panel title="Dietary needs" sub="Share of quizzes asking for each" className="lg:col-span-4">
-                {d ? <BarList rows={dietRows} color="#50E3C2" max={100} format={(v) => `${v}%`} /> : null}
+                {d ? <BarList rows={dietRows} color="#7FE0AE" max={100} format={(v) => `${v}%`} /> : null}
               </Panel>
               <Panel title="Latest matches" sub="Most recent first" className="lg:col-span-3">
                 {d?.recent?.length ? (
@@ -289,13 +289,13 @@ export default function TelemetryDashboard() {
                     {d.recent.slice(0, 6).map((r) => (
                       <li key={`${r.id}-${r.t}`} className="flex items-center gap-2 text-sm">
                         <Swatch flavorId={r.id} size={12} />
-                        <span className="min-w-0 flex-1 truncate font-medium text-chrome">{FLAVOR_BY_ID[r.id]?.name}</span>
-                        <span className="t-tele shrink-0 text-xs text-chrome-faint">{ago(r.t)}</span>
+                        <span className="min-w-0 flex-1 truncate font-medium text-ink">{FLAVOR_BY_ID[r.id]?.name}</span>
+                        <span className="t-tele shrink-0 text-xs text-ink-faint">{ago(r.t)}</span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-chrome-dim">No quizzes yet. Take one above and you&apos;ll show up here.</p>
+                  <p className="text-sm text-ink-dim">No quizzes yet. Take one above and you&apos;ll show up here.</p>
                 )}
               </Panel>
             </>

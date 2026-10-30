@@ -26,7 +26,7 @@ import { TransitionEffect } from './shaders/TransitionEffect';
  *   LaMa        optional llama cutout peeking from the bottom edge; click it
  *               for the hidden perk.
  *   Post        rain on the glass, film grain, scroll-speed chromatic
- *               aberration, and the obsidian melt as the hero scrolls away.
+ *               aberration, and the melt into deep green as the hero scrolls away.
  *
  * Orthographic camera: 1 world unit = 1 CSS pixel.
  */
@@ -82,7 +82,7 @@ void main() {
   } else {
     // no photo yet: quiet studio gradient
     float g = smoothstep(1.1, 0.0, length((uv - vec2(0.62, 0.45)) * vec2(1.6, 1.0)));
-    col = mix(vec3(0.004), vec3(0.03, 0.03, 0.035), g);
+    col = mix(vec3(0.022, 0.1, 0.065), vec3(0.06, 0.24, 0.16), g); // deep Tifa green
   }
   col *= uTint * uLift * uDim;
   // gentle darkening toward the copy (left and bottom) so type stays legible
@@ -388,7 +388,7 @@ function Llama({ url }) {
 }
 
 /* ------------------------------------------------------------------------ */
-const OBSIDIAN = new THREE.Color('#0A0A0C');
+const DEEP_GREEN = new THREE.Color('#0E3B28');
 
 function Effects({ tier, mode }) {
   const ca = useRef(null);
@@ -407,7 +407,7 @@ function Effects({ tier, mode }) {
     if (tu) {
       tu.get('uScan').value = introState.scan;
       tu.get('uMelt').value = THREE.MathUtils.smoothstep(introState.exit, 0.3, 0.97);
-      tu.get('uBg').value.copy(OBSIDIAN);
+      tu.get('uBg').value.copy(DEEP_GREEN);
     }
   });
   const showRain = mode === 'rain' || rainLevel.current > 0.01;
@@ -477,7 +477,7 @@ export default function HeroStage({ hero, focal = [0.5, 0.5], cutouts = [], llam
       gl={{ antialias: true, alpha: false, stencil: false, powerPreference: 'high-performance' }}
       aria-hidden="true"
     >
-      <color attach="background" args={['#0A0A0C']} />
+      <color attach="background" args={['#0E3B28']} />
       {throttled && active ? <FrameThrottle fps={t.fps} /> : null}
       <Suspense fallback={null}>
         <Scene hero={hero} focal={focal} items={items} llama={llama} reducedMotion={reducedMotion} />

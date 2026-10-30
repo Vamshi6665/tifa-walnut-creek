@@ -4,7 +4,9 @@ import manifest from './media.generated.json';
 export const MEDIA = manifest;
 
 export const LOGO = manifest.brand.logo;
-export const LOGO_WHITE = manifest.brand.logoWhite ?? manifest.brand.logo;
+export const LOGO_WHITE = manifest.brand.logoWhite;
+/** Tifa green sampled from the logo file at build time (null until the logo is added). */
+export const BRAND_COLORS = manifest.brand.colors ?? null;
 
 export const photo = (slot) => manifest.photos[slot] ?? null;
 export const flavorPhoto = (id) => manifest.flavors[id] ?? null;

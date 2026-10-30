@@ -35,7 +35,7 @@ export default function PerkOverlay() {
     <AnimatePresence>
       {open ? (
         <motion.div
-          className="fixed inset-0 z-[80] grid place-items-center bg-obsidian/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[80] grid place-items-center bg-paper/70 p-4 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -58,17 +58,17 @@ export default function PerkOverlay() {
               type="button"
               onClick={close}
               aria-label="Close"
-              className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-[3px] border border-line text-chrome hover:border-chrome"
+              className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-[3px] border border-line text-ink hover:border-ink"
             >
               <X size={18} />
             </button>
-            <h2 id="perk-title" className="t-h3 pr-12 text-vanilla">
+            <h2 id="perk-title" className="t-h3 pr-12 text-ink">
               {LAMA_PERK.title}
             </h2>
-            <p className="mt-2 text-chrome-dim">{LAMA_PERK.body}</p>
+            <p className="mt-2 text-ink-dim">{LAMA_PERK.body}</p>
 
             <div className="mt-6 rounded-md border border-line p-4">
-              <p className="text-sm font-medium text-chrome">Birthday this month? Pick it to see your birthday flavor.</p>
+              <p className="text-sm font-medium text-ink">Birthday this month? Pick it to see your birthday flavor.</p>
               <div className="mt-3 grid grid-cols-6 gap-1.5" role="group" aria-label="Birthday month">
                 {MONTHS.map((m, i) => (
                   <button
@@ -77,7 +77,7 @@ export default function PerkOverlay() {
                     aria-pressed={month === i}
                     onClick={() => setMonth(i)}
                     className={`h-9 rounded-lg text-sm font-medium transition-colors ${
-                      month === i ? 'bg-mint text-obsidian' : 'bg-white/5 text-chrome-dim hover:text-chrome'
+                      month === i ? 'bg-green text-paper' : 'bg-ink/5 text-ink-dim hover:text-ink'
                     }`}
                   >
                     {m}
@@ -85,16 +85,16 @@ export default function PerkOverlay() {
                 ))}
               </div>
               {birthdayName ? (
-                <p className="mt-4 flex items-center gap-3 text-chrome" aria-live="polite">
+                <p className="mt-4 flex items-center gap-3 text-ink" aria-live="polite">
                   {flavor ? <Swatch flavorId={flavor.id} size={28} /> : null}
                   <span>
-                    Your birthday flavor is <strong className="text-vanilla">{birthdayName}</strong>. Mention it at the counter
+                    Your birthday flavor is <strong className="text-ink">{birthdayName}</strong>. Mention it at the counter
                     {flavor ? '.' : '; it rotates in seasonally.'}
                   </span>
                 </p>
               ) : null}
             </div>
-            <p className="mt-4 text-xs text-chrome-faint">{LAMA_PERK.footnote}</p>
+            <p className="mt-4 text-xs text-ink-faint">{LAMA_PERK.footnote}</p>
           </motion.div>
         </motion.div>
       ) : null}

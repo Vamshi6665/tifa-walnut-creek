@@ -9,7 +9,7 @@ import { Color, Uniform } from 'three';
  *
  * ARRIVAL ("print")  uScan 0→1
  *   A hairline beam rises from the bottom of the frame. Below it the scene
- *   exists; above it there is only obsidian and a faint mint construction grid.
+ *   exists; above it there is only deep green and a faint leaf-green construction grid.
  *   The band just under the beam is over-exposed and slice-jittered for a few
  *   frames, so the coupe reads as being fabricated from the base upward.
  *
@@ -66,20 +66,20 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     float slice = floor(uv.y * 160.0);
     float jitter = (tf_h11(slice + floor(uTime * 24.0)) - 0.5) * 0.012 * fresh;
     vec3 src = texture2D(inputBuffer, uv + vec2(jitter, 0.0)).rgb;
-    vec3 printedCol = src * (1.0 + fresh * 0.9) + vec3(0.7, 1.0, 0.92) * fresh * 0.05;
+    vec3 printedCol = src * (1.0 + fresh * 0.9) + vec3(0.6, 1.0, 0.8) * fresh * 0.05;
 
     // construction grid ahead of the beam
     float gx = 1.0 - smoothstep(0.0, 0.014, 0.5 - abs(fract(uv.x * aspect * 18.0) - 0.5));
     float gy = 1.0 - smoothstep(0.0, 0.014, 0.5 - abs(fract(uv.y * 18.0) - 0.5));
     float grid = max(gx, gy) * smoothstep(0.45, 0.0, d) * (1.0 - printed);
-    vec3 ahead = uBg + vec3(0.31, 0.89, 0.76) * grid * 0.07;
+    vec3 ahead = uBg + vec3(0.5, 0.88, 0.68) * grid * 0.07;
 
     col = mix(ahead, printedCol, printed);
     float beam = exp(-abs(d) * 1400.0) + exp(-abs(d) * 120.0) * 0.18;
     col += vec3(0.9, 1.0, 0.96) * beam * 1.25;
   }
 
-  // ---------------- exit: obsidian melt ----------------
+  // ---------------- exit: melt into deep green ----------------
   if (uMelt >= 0.001) {
     float front = 1.0 - tf_front(uv.x, uMelt);       // y of the liquid front
     float below = front - uv.y;                       // > 0: scene still visible
@@ -91,7 +91,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     // mercury lip on the liquid front
     float lip = exp(-abs(below + 0.004) * 420.0);
     float sheen = 0.5 + 0.5 * sin(uv.x * 90.0 + uTime * 1.5);
-    vec3 liquid = uBg + vec3(0.78, 0.82, 0.9) * lip * (0.35 + 0.25 * sheen);
+    vec3 liquid = uBg + vec3(0.62, 0.9, 0.75) * lip * (0.35 + 0.25 * sheen);
     col = mix(scene, liquid, max(covered, lip * 0.85));
   }
 
@@ -108,7 +108,7 @@ export class TransitionEffectImpl extends Effect {
         ['uScan', new Uniform(1)],
         ['uMelt', new Uniform(0)],
         ['uTime', new Uniform(0)],
-        ['uBg', new Uniform(new Color('#0A0A0C'))],
+        ['uBg', new Uniform(new Color('#0E3B28'))],
       ]),
     });
   }

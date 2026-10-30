@@ -58,7 +58,7 @@ function Telemetry() {
           <dt className="text-[var(--hero-ink-dim)]">{label}</dt>
           <dd className="t-tele flex items-center gap-2 text-right text-[var(--hero-ink)]">
             {label === 'Today' && status ? (
-              <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${status.open ? 'bg-mint' : 'bg-rose'}`} />
+              <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${status.open ? 'bg-green' : 'bg-green'}`} />
             ) : null}
             <Decode text={value} delay={i * 0.09} />
           </dd>
@@ -270,7 +270,7 @@ export default function Hero() {
 
   return (
     <section id="top" ref={wrap} data-mode="night" className="relative h-[175svh]" aria-label="Tifa Chocolate & Gelato, Walnut Creek">
-      <div className="sticky top-0 h-[100svh] min-h-[600px] w-full overflow-hidden bg-obsidian">
+      <div className="sticky top-0 h-[100svh] min-h-[600px] w-full overflow-hidden bg-paper">
         <div className="absolute inset-0">
           {near && tier !== 'none' ? (
             <SafeBoundary
@@ -291,7 +291,7 @@ export default function Hero() {
             <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80" />
           ) : null}
           {MEDIA.showPlaceholders && (!hero || !items.length) ? (
-            <div className="t-tele pointer-events-none absolute right-6 top-1/2 max-w-[18rem] -translate-y-1/2 text-[0.72rem] leading-relaxed text-chrome-faint md:right-[24%]">
+            <div className="t-tele pointer-events-none absolute right-6 top-1/2 max-w-[18rem] -translate-y-1/2 text-[0.72rem] leading-relaxed text-ink-faint md:right-[24%]">
               {!hero ? <p>Add hero photo: public/photos/hero.jpg</p> : null}
               {!items.length ? <p className="mt-2">Add 1 to 3 gelato cutouts (transparent PNG): public/photos/cutouts/</p> : null}
             </div>
@@ -304,7 +304,7 @@ export default function Hero() {
         >
           {/* top row: headline (left) · live store facts (right) */}
           <div className="flex items-start justify-between gap-10">
-            <h1 className="t-display text-chrome" data-warp>
+            <h1 className="t-display text-ink" data-warp>
               <span className="block overflow-hidden pb-[0.08em]">
                 <span className="block" data-intro="line">
                   Made this morning
@@ -324,7 +324,7 @@ export default function Hero() {
           {/* bottom row: copy + actions (left) · case, rating, catering (right) */}
           <div className="mt-auto flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
             <div className="md:max-w-[26rem]">
-              <p className="t-lede hidden text-chrome-dim md:block" data-intro="ui">
+              <p className="t-lede hidden text-ink-dim md:block" data-intro="ui">
                 {STORE.flavorCount} flavors of gelato and sorbetto made in-house every day, artisan chocolates, and Groundwork coffee. Next to the
                 Lesher Center.
               </p>
@@ -343,7 +343,7 @@ export default function Hero() {
           </div>
 
           {/* keyboard / screen-reader route to the hidden LaMa */}
-          <button type="button" className="sr-only pointer-events-auto focus:not-sr-only focus:mt-2 focus:text-chrome" onClick={openPerk}>
+          <button type="button" className="sr-only pointer-events-auto focus:not-sr-only focus:mt-2 focus:text-ink" onClick={openPerk}>
             Find the hidden LaMa
           </button>
         </div>

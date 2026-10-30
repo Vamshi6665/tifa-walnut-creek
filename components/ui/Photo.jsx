@@ -18,12 +18,12 @@ export default function Photo({ slot, src: srcProp, alt, className = '', sizes =
   }
   return (
     <div
-      className={`relative overflow-hidden bg-obsidian-2 bg-[repeating-linear-gradient(135deg,rgb(226_232_240/0.035)_0_1px,transparent_1px_14px)] ${className}`}
+      className={`relative overflow-hidden bg-paper-2 bg-[repeating-linear-gradient(135deg,rgb(226_232_240/0.035)_0_1px,transparent_1px_14px)] ${className}`}
       role="img"
       aria-label={alt ?? meta.alt ?? ''}
     >
       {MEDIA.showPlaceholders ? (
-        <span className="t-tele absolute bottom-3 left-3 right-3 text-[0.7rem] leading-snug text-chrome-faint">
+        <span className="t-tele absolute bottom-3 left-3 right-3 text-[0.7rem] leading-snug text-ink-faint">
           Add photo: {meta.label ?? slot}
           <br />
           public/photos/{slot}.jpg

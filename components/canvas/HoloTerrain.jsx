@@ -73,9 +73,9 @@ void main() {
   float d = length(gl_PointCoord - 0.5);
   float a = 1.0 - smoothstep(0.15, 0.5, d);
   if (a < 0.02) discard;
-  vec3 low = vec3(0.18, 0.55, 0.5);
-  vec3 high = vec3(0.31, 0.89, 0.76);
-  vec3 peak = vec3(1.0, 0.97, 0.84);
+  vec3 low = vec3(0.09, 0.42, 0.28);
+  vec3 high = vec3(0.5, 0.88, 0.68);
+  vec3 peak = vec3(1.0, 1.0, 0.96);
   vec3 c = mix(low, high, smoothstep(-0.3, 0.8, vH));
   c = mix(c, peak, smoothstep(1.2, 2.3, vH));
   float band = smoothstep(0.92, 1.0, fract(vH * 4.0)); // contour lines
@@ -156,7 +156,7 @@ function Beacon({ labels }) {
     <group position={[0, y0, 0]}>
       <mesh ref={beam} position={[0, 0.9, 0]}>
         <cylinderGeometry args={[0.008, 0.025, 1.8, 10, 1, true]} />
-        <meshBasicMaterial color="#FF9EAA" transparent opacity={0.6} toneMapped={false} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <meshBasicMaterial color="#F7E7C1" transparent opacity={0.6} toneMapped={false} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
       <mesh>
         <sphereGeometry args={[0.08, 16, 12]} />
@@ -198,7 +198,7 @@ export default function HoloTerrain({ active = true, reducedMotion = false, labe
       <Terrain count={t.globe * 3} />
       <Beacon labels={labels} />
       <Anchor position={[DIABLO.x, terrainHeight(DIABLO.x, DIABLO.y) + 0.35, DIABLO.y]} target={labels?.diablo} />
-      <gridHelper args={[11, 22, '#1d3b36', '#13201f']} position={[0, -0.36, 0]} />
+      <gridHelper args={[11, 22, '#1e6646', '#14452f']} position={[0, -0.36, 0]} />
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.55} radius={0.6} />
       </EffectComposer>

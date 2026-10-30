@@ -18,7 +18,7 @@ export default function InertiaCard({ children, className = '', max = 10, glare 
   const ry = useSpring(useTransform(px, [0, 1], [-max, max]), spring);
   const gx = useTransform(px, [0, 1], ['0%', '100%']);
   const gy = useTransform(py, [0, 1], ['0%', '100%']);
-  const glareBg = useTransform([gx, gy], ([x, y]) => `radial-gradient(400px circle at ${x} ${y}, rgba(255,247,214,0.14), transparent 45%)`);
+  const glareBg = useTransform([gx, gy], ([x, y]) => `radial-gradient(400px circle at ${x} ${y}, rgba(255,255,255,0.16), transparent 45%)`);
   const glareOpacity = useSpring(0, { stiffness: 200, damping: 30 });
   const Comp = motion[as] ?? motion.div;
 

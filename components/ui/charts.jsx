@@ -11,9 +11,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
  * (focus the chart, then ←/→).
  */
 
-const SURFACE = '#121218';
-const GRID = 'rgb(226 232 240 / 0.08)';
-const AXIS_TEXT = '#9AA3B2';
+const SURFACE = '#124A33';
+const GRID = 'rgb(255 255 255 / 0.1)';
+const AXIS_TEXT = 'rgb(255 255 255 / 0.66)';
 
 function useWidth(ref) {
   const [w, setW] = useState(0);
@@ -40,7 +40,7 @@ function Tooltip({ x, y, children, width }) {
   return (
     <div
       role="status"
-      className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-xl border border-line bg-obsidian/95 px-3 py-2 text-sm shadow-xl"
+      className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-xl border border-line bg-paper/95 px-3 py-2 text-sm shadow-xl"
       style={{ left, top: y - 10 }}
     >
       {children}
@@ -57,7 +57,7 @@ function roundedTopBar(x, y, w, h, r = 4) {
 /* ------------------------------------------------------------------ */
 /* Column chart — quiz activity by hour (single series, no legend)     */
 /* ------------------------------------------------------------------ */
-export function HourColumns({ values, color = '#50E3C2', height = 200, label }) {
+export function HourColumns({ values, color = '#7FE0AE', height = 200, label }) {
   const ref = useRef(null);
   const width = useWidth(ref);
   const [active, setActive] = useState(null);
@@ -106,19 +106,19 @@ export function HourColumns({ values, color = '#50E3C2', height = 200, label }) 
             );
           })}
           {values[peak] > 0 ? (
-            <text x={pad.l + peak * slot + slot / 2} y={y(values[peak]) - 6} textAnchor="middle" fontSize="11" fontWeight="700" fill="#E2E8F0" className="t-tele">
+            <text x={pad.l + peak * slot + slot / 2} y={y(values[peak]) - 6} textAnchor="middle" fontSize="11" fontWeight="700" fill="#FFFFFF" className="t-tele">
               {values[peak]}
             </text>
           ) : null}
-          <line x1={pad.l} x2={width - pad.r} y1={pad.t + ih} y2={pad.t + ih} stroke="rgb(226 232 240 / 0.18)" strokeWidth="1" />
+          <line x1={pad.l} x2={width - pad.r} y1={pad.t + ih} y2={pad.t + ih} stroke="rgb(255 255 255 / 0.22)" strokeWidth="1" />
         </svg>
       ) : (
         <div style={{ height }} />
       )}
       {active != null && width ? (
         <Tooltip x={pad.l + active * slot + slot / 2} y={y(values[active])} width={width}>
-          <strong className="t-tele text-base text-chrome">{values[active]}</strong>{' '}
-          <span className="text-chrome-dim">
+          <strong className="t-tele text-base text-ink">{values[active]}</strong>{' '}
+          <span className="text-ink-dim">
             quizzes, {hourLabel(active)}m to {hourLabel((active + 1) % 24)}m
           </span>
         </Tooltip>
@@ -130,7 +130,7 @@ export function HourColumns({ values, color = '#50E3C2', height = 200, label }) 
 /* ------------------------------------------------------------------ */
 /* Line + area — quizzes per day                                        */
 /* ------------------------------------------------------------------ */
-export function DailyLine({ data, color = '#FF9EAA', height = 200, label }) {
+export function DailyLine({ data, color = '#F7E7C1', height = 200, label }) {
   const ref = useRef(null);
   const width = useWidth(ref);
   const [active, setActive] = useState(null);
@@ -194,12 +194,12 @@ export function DailyLine({ data, color = '#FF9EAA', height = 200, label }) {
           ))}
           {/* end marker + direct label */}
           <circle cx={pts[last]?.[0]} cy={pts[last]?.[1]} r="5" fill={color} stroke={SURFACE} strokeWidth="2" />
-          <text x={(pts[last]?.[0] ?? 0) + 9} y={(pts[last]?.[1] ?? 0) + 4} fontSize="12" fontWeight="700" fill="#E2E8F0" className="t-tele">
+          <text x={(pts[last]?.[0] ?? 0) + 9} y={(pts[last]?.[1] ?? 0) + 4} fontSize="12" fontWeight="700" fill="#FFFFFF" className="t-tele">
             {data[last]?.count}
           </text>
           {active != null ? (
             <g>
-              <line x1={x(active)} x2={x(active)} y1={pad.t} y2={pad.t + ih} stroke="rgb(226 232 240 / 0.35)" strokeWidth="1" />
+              <line x1={x(active)} x2={x(active)} y1={pad.t} y2={pad.t + ih} stroke="rgb(255 255 255 / 0.4)" strokeWidth="1" />
               <circle cx={pts[active][0]} cy={pts[active][1]} r="5" fill={color} stroke={SURFACE} strokeWidth="2" />
             </g>
           ) : null}
@@ -209,8 +209,8 @@ export function DailyLine({ data, color = '#FF9EAA', height = 200, label }) {
       )}
       {active != null && width ? (
         <Tooltip x={x(active)} y={pts[active][1]} width={width}>
-          <strong className="t-tele text-base text-chrome">{data[active].count}</strong>{' '}
-          <span className="text-chrome-dim">quizzes on {active === last ? 'today' : fmt(data[active].day)}</span>
+          <strong className="t-tele text-base text-ink">{data[active].count}</strong>{' '}
+          <span className="text-ink-dim">quizzes on {active === last ? 'today' : fmt(data[active].day)}</span>
         </Tooltip>
       ) : null}
     </div>
@@ -220,7 +220,7 @@ export function DailyLine({ data, color = '#FF9EAA', height = 200, label }) {
 /* ------------------------------------------------------------------ */
 /* Horizontal bar list — top flavors / dietary share                    */
 /* ------------------------------------------------------------------ */
-export function BarList({ rows, color = '#FF9EAA', format = (v) => v, max: maxIn, renderLabel }) {
+export function BarList({ rows, color = '#F7E7C1', format = (v) => v, max: maxIn, renderLabel }) {
   const max = maxIn ?? Math.max(1, ...rows.map((r) => r.value));
   const [hover, setHover] = useState(null);
   return (
@@ -228,10 +228,10 @@ export function BarList({ rows, color = '#FF9EAA', format = (v) => v, max: maxIn
       {rows.map((r) => (
         <li key={r.key} onPointerEnter={() => setHover(r.key)} onPointerLeave={() => setHover(null)}>
           <div className="flex items-baseline justify-between gap-3 text-sm">
-            <span className="flex min-w-0 items-center gap-2 font-medium text-chrome">{renderLabel ? renderLabel(r) : r.label}</span>
-            <span className="t-tele text-chrome">{format(r.value)}</span>
+            <span className="flex min-w-0 items-center gap-2 font-medium text-ink">{renderLabel ? renderLabel(r) : r.label}</span>
+            <span className="t-tele text-ink">{format(r.value)}</span>
           </div>
-          <div className="mt-1.5 h-2.5 w-full rounded-full bg-white/[0.04]">
+          <div className="mt-1.5 h-2.5 w-full rounded-full bg-ink/[0.04]">
             <div
               className="h-full rounded-full transition-[width,opacity] duration-700"
               style={{ width: `${Math.max(1.5, (r.value / max) * 100)}%`, background: color, opacity: hover == null || hover === r.key ? 1 : 0.5 }}

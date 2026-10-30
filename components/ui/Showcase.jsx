@@ -86,8 +86,8 @@ export default function Showcase() {
       </div>
       {p.title ? (
         <figcaption className="mt-5 grid gap-1 md:grid-cols-[1fr_1.2fr] md:gap-8">
-          <span className="t-h3 text-chrome">{p.title}</span>
-          <span className="text-chrome-dim">{p.body}</span>
+          <span className="t-h3 text-ink">{p.title}</span>
+          <span className="text-ink-dim">{p.body}</span>
         </figcaption>
       ) : null}
     </figure>
@@ -95,13 +95,13 @@ export default function Showcase() {
 
   if (!pinned) {
     return (
-      <section id="shop" className="relative bg-obsidian py-20" aria-label="Inside the shop">
+      <section id="shop" className="on-green relative bg-paper py-20" aria-label="Inside the shop">
         <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-4">{items}</div>
       </section>
     );
   }
   return (
-    <section id="shop" ref={wrap} className="relative bg-obsidian" style={{ height: `${100 + (panels.length - 1) * 62}svh` }} aria-label="Inside the shop">
+    <section id="shop" ref={wrap} className="on-green relative bg-paper" style={{ height: `${100 + (panels.length - 1) * 62}svh` }} aria-label="Inside the shop">
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         <div ref={track} className="flex gap-[4vw] pl-[8vw] pr-[8vw] will-change-transform">
           {items}

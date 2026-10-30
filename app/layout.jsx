@@ -1,6 +1,13 @@
 import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource-variable/jetbrains-mono';
 import './globals.css';
+import { BRAND_COLORS } from '@/content/media';
+
+// When the real logo is in public/brand, its sampled green replaces the default Tifa green.
+const brandCss = BRAND_COLORS
+  ? `html:root,html .on-paper,html [data-mode='day']{--color-green:${BRAND_COLORS.green};--color-green-ink:${BRAND_COLORS.greenInk}}` +
+    `html .on-green,html [data-mode='night']{--color-green:${BRAND_COLORS.leaf};--color-green-ink:${BRAND_COLORS.leaf}}`
+  : null;
 
 export const metadata = {
   metadataBase: new URL('https://tifa-walnut-creek.vercel.app'),
@@ -17,7 +24,7 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0A0A0C',
+  themeColor: '#1F9A62',
 };
 
 const jsonLd = {
@@ -50,6 +57,7 @@ export default function RootLayout({ children }) {
             __html: `try{var d=document.documentElement;if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/[?&]intro=0/.test(location.search)){d.classList.add('tf-intro');if(sessionStorage.getItem('tf-intro-seen')&&!/[?&]intro=1/.test(location.search))d.classList.add('tf-intro-quick')}}catch(e){}`,
           }}
         />
+        {brandCss ? <style dangerouslySetInnerHTML={{ __html: brandCss }} /> : null}
       </head>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

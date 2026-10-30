@@ -97,7 +97,7 @@ export default function FlavorColliderQuiz() {
   };
 
   return (
-    <section id="game" className="relative scroll-mt-16 bg-obsidian" aria-labelledby="game-title">
+    <section id="game" className="on-green relative scroll-mt-16 bg-paper" aria-labelledby="game-title">
       <div ref={stage} className="relative min-h-[100svh] overflow-hidden">
         <div className="absolute inset-0">
           {near && tier !== 'none' ? <SafeBoundary><ParticleCollider active={visible} /></SafeBoundary> : null}
@@ -109,7 +109,7 @@ export default function FlavorColliderQuiz() {
               <h2 id="game-title" className="t-h2 max-w-[12ch]" data-warp>
                 Four questions, one flavor.
               </h2>
-              <p className="t-body mt-4 max-w-[40ch] text-chrome-dim">
+              <p className="t-body mt-4 max-w-[40ch] text-ink-dim">
                 Every answer fires a stream into the collider. When all four are in, smash them together and see what comes out.
               </p>
             </div>
@@ -118,7 +118,7 @@ export default function FlavorColliderQuiz() {
               onClick={toggleSound}
               aria-pressed={sound}
               aria-label={sound ? 'Mute collider sounds' : 'Turn collider sounds on'}
-              className="pointer-events-auto grid h-11 w-11 shrink-0 place-items-center rounded-[3px] border border-line text-chrome hover:border-chrome"
+              className="pointer-events-auto grid h-11 w-11 shrink-0 place-items-center rounded-[3px] border border-line text-ink hover:border-ink"
             >
               {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>
@@ -137,21 +137,19 @@ export default function FlavorColliderQuiz() {
                 >
                   <InertiaCard className="holo rounded-lg p-6 md:col-span-7 md:p-8 lg:col-span-6 xl:col-span-5">
                     <div className="flex items-center justify-between gap-4">
-                      <p className="font-display text-xl font-normal [font-stretch:125%]">
-                        tifa<span className="text-rose">.</span> <span className="text-base font-medium text-chrome-dim">flavor passport</span>
-                      </p>
-                      <p className="t-tele text-sm text-mint">{result.matchPct}% match</p>
+                      <p className="text-base font-medium text-ink-dim">Flavor passport · Tifa Walnut Creek</p>
+                      <p className="t-tele text-sm text-green-ink">{result.matchPct}% match</p>
                     </div>
                     <div className="mt-7">
                       <Swatch flavorId={result.flavor.id} size={44} />
                       <h3
-                        className="mt-4 hyphens-auto break-words font-display text-[clamp(1.9rem,3.4vw,2.9rem)] font-light [font-stretch:125%] leading-[0.95] tracking-tight text-vanilla"
+                        className="mt-4 hyphens-auto break-words font-display text-[clamp(1.9rem,3.4vw,2.9rem)] font-light [font-stretch:125%] leading-[0.95] tracking-tight text-ink"
                         aria-live="polite"
                       >
                         {result.flavor.name}
                       </h3>
                     </div>
-                    <p className="mt-5 text-chrome-dim">
+                    <p className="mt-5 text-ink-dim">
                       You asked for {because(answers)}.{' '}
                       {answers.dietary.length
                         ? `Matched from the ${result.poolSize} flavors that are ${answers.dietary
@@ -159,16 +157,16 @@ export default function FlavorColliderQuiz() {
                             .join(' and ')}.`
                         : `Matched from all ${result.poolSize} flavors.`}
                     </p>
-                    {note ? <p className="mt-3 text-chrome">{note.text}</p> : null}
+                    {note ? <p className="mt-3 text-ink">{note.text}</p> : null}
                     <div className="mt-6 flex flex-wrap gap-2">
                       {topTraits(result.flavor.id, 3).map((t) => (
-                        <span key={t} className="rounded-[3px] border border-line px-3 py-1 text-sm text-chrome-dim">
+                        <span key={t} className="rounded-[3px] border border-line px-3 py-1 text-sm text-ink-dim">
                           {t}
                         </span>
                       ))}
                     </div>
                     {result.runnersUp.length ? (
-                      <p className="mt-6 border-t border-line pt-4 text-sm text-chrome-dim">
+                      <p className="mt-6 border-t border-line pt-4 text-sm text-ink-dim">
                         Close seconds: {result.runnersUp.map((f) => f.name).join(' and ')}
                       </p>
                     ) : null}
@@ -205,7 +203,7 @@ export default function FlavorColliderQuiz() {
                         type="button"
                         onClick={() => setQuizStep(step - 1)}
                         aria-label="Previous question"
-                        className="grid h-9 w-9 place-items-center rounded-[3px] border border-line text-chrome hover:border-chrome"
+                        className="grid h-9 w-9 place-items-center rounded-[3px] border border-line text-ink hover:border-ink"
                       >
                         <ArrowLeft size={16} />
                       </button>
@@ -219,13 +217,13 @@ export default function FlavorColliderQuiz() {
                         />
                       ))}
                     </ol>
-                    <span className="t-tele ml-auto text-sm text-chrome-dim">{ready ? '4 of 4' : `${step + 1} of 4`}</span>
+                    <span className="t-tele ml-auto text-sm text-ink-dim">{ready ? '4 of 4' : `${step + 1} of 4`}</span>
                   </div>
 
                   {ready ? (
                     <>
                       <h3 className="t-h3 mt-6">All four streams are in.</h3>
-                      <p className="mt-2 text-chrome-dim">
+                      <p className="mt-2 text-ink-dim">
                         {poolSize} flavors fit your filters. Collide them to find the closest one to {because(answers)}.
                       </p>
                       <button type="button" className="btn btn-primary mt-6" onClick={collide} data-magnetic disabled={!poolSize}>
@@ -235,7 +233,7 @@ export default function FlavorColliderQuiz() {
                   ) : (
                     <fieldset className="mt-6">
                       <legend className="t-h3">{q.title}</legend>
-                      {q.hint ? <p className="mt-2 text-sm text-chrome-dim">{q.hint}</p> : null}
+                      {q.hint ? <p className="mt-2 text-sm text-ink-dim">{q.hint}</p> : null}
                       <div className={`mt-5 grid gap-2 ${q.options.length === 4 ? 'sm:grid-cols-2' : ''}`}>
                         {q.options.map((o) => {
                           const on = q.multi ? answers.dietary.includes(o.id) : answers[q.id] === o.id;
@@ -246,7 +244,7 @@ export default function FlavorColliderQuiz() {
                               aria-pressed={on}
                               onClick={() => (q.multi ? toggleDiet(o.id) : answer(q.id, o.id))}
                               className={`flex min-h-14 items-center rounded-md border px-5 text-left text-base font-medium transition-colors ${
-                                on ? 'border-transparent text-obsidian' : 'border-line text-chrome hover:border-chrome hover:bg-white/[0.04]'
+                                on ? 'border-transparent text-paper' : 'border-line text-ink hover:border-ink hover:bg-ink/[0.04]'
                               }`}
                               style={on ? { background: STREAM_COLORS[step] } : undefined}
                             >
@@ -269,7 +267,7 @@ export default function FlavorColliderQuiz() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="t-tele text-center text-lg text-mint"
+                  className="t-tele text-center text-lg text-green-ink"
                   aria-live="assertive"
                 >
                   Colliding…
