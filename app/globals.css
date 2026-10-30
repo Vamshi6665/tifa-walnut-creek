@@ -1,0 +1,257 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------------ */
+/* Design tokens — "Futuristic gelato laboratory meets cyberpunk lounge"     */
+/* ------------------------------------------------------------------------ */
+@theme {
+  --color-obsidian: #0a0a0c;
+  --color-obsidian-2: #121218;
+  --color-obsidian-3: #1a1a22;
+  --color-chrome: #e2e8f0;
+  --color-chrome-dim: #9aa3b2;
+  --color-chrome-faint: #5d6574;
+  --color-rose: #ff9eaa;
+  --color-mint: #50e3c2;
+  --color-vanilla: #fff7d6;
+  --color-line: rgb(226 232 240 / 0.12);
+
+  --font-display: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: dark;
+  --hero-ink: var(--color-chrome);
+  --hero-ink-dim: var(--color-chrome-dim);
+  --hero-panel: rgb(10 10 12 / 0.55);
+  --hero-line: rgb(226 232 240 / 0.16);
+  --hero-bg: var(--color-obsidian);
+}
+
+/* daylight turns the hero into a bright studio — invert its ink */
+[data-mode='day'] {
+  --hero-ink: #14151b;
+  --hero-ink-dim: #4a5160;
+  --hero-panel: rgb(255 255 255 / 0.55);
+  --hero-line: rgb(20 21 27 / 0.14);
+  --hero-bg: #e9edf2;
+}
+
+html {
+  background: var(--color-obsidian);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 72px;
+}
+
+body {
+  background: var(--color-obsidian);
+  color: var(--color-chrome);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-rose);
+  color: var(--color-obsidian);
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Type: one family (Archivo), two widths. Display is set expanded and light,
+   in the "Monument Extended" register the brief asks for; body stays normal width. */
+.t-display {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 0.94;
+  font-size: clamp(2.3rem, 4.2vw, 4.5rem);
+}
+.t-h2 {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-size: clamp(2.1rem, 4.4vw, 4rem);
+  text-wrap: balance;
+}
+.t-h3 {
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+}
+.t-lede {
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.6;
+  max-width: 40ch;
+  text-wrap: pretty;
+}
+/* small structural label: sentence case, never all caps */
+.t-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--color-chrome-dim);
+}
+.t-body {
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* Telemetry is the only place the mono face appears */
+.t-tele {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'zero' on;
+  letter-spacing: -0.01em;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0 1.35rem;
+  border-radius: 3px;
+  font-weight: 500;
+  font-stretch: 112%;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s var(--ease-out-expo);
+  will-change: transform;
+}
+.btn-primary {
+  background: var(--hero-ink, var(--color-chrome));
+  color: var(--hero-bg, var(--color-obsidian));
+}
+.btn-primary:hover {
+  background: var(--color-vanilla);
+  color: var(--color-obsidian);
+}
+.btn-ghost {
+  border: 1px solid var(--hero-line, var(--color-line));
+  color: var(--hero-ink, var(--color-chrome));
+  background: var(--hero-panel, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.btn-ghost:hover {
+  border-color: currentColor;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Glass panel used for overlays / hover cards */
+.holo {
+  background: linear-gradient(160deg, rgb(26 26 34 / 0.72), rgb(10 10 12 / 0.6));
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+}
+
+/* Scanline + grid texture for telemetry panels */
+.hud {
+  position: relative;
+  background:
+    linear-gradient(rgb(80 227 194 / 0.035) 1px, transparent 1px) 0 0 / 100% 24px,
+    linear-gradient(180deg, rgb(18 18 24 / 0.9), rgb(10 10 12 / 0.9));
+  border: 1px solid rgb(226 232 240 / 0.1);
+}
+.hud::before,
+.hud::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--color-mint);
+  border-style: solid;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.hud::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+.hud::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+/* Intro (see components/ui/Hero.jsx). Classes are set pre-paint in layout.jsx;
+   without JS or with reduced motion none of this applies. */
+#tf-preloader {
+  display: none;
+}
+.tf-intro:not(.tf-intro-quick) #tf-preloader {
+  display: grid;
+}
+.tf-intro [data-intro] {
+  opacity: 0;
+}
+
+/* Fluid cursor (fine pointers only; native cursor hidden only where we draw our own) */
+html.has-fluid-cursor,
+html.has-fluid-cursor a,
+html.has-fluid-cursor button,
+html.has-fluid-cursor canvas {
+  cursor: none;
+}
+html.has-fluid-cursor input,
+html.has-fluid-cursor textarea,
+html.has-fluid-cursor select {
+  cursor: auto;
+}
+
+/* Hover displacement on headings */
+.warp-hover {
+  transition: filter 0.4s;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
