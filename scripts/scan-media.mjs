@@ -67,7 +67,7 @@ async function brandColors(src) {
       else if (max === g) h = (b - r) / (max - min) + 2;
       else h = (r - g) / (max - min) + 4;
       h = (h * 60 + 360) % 360;
-      if (h < 70 || h > 185) continue; // greens and teals only
+      if (h < 70 || h > 200) continue; // greens and teals only
       const k = Math.round(h / 10);
       const e = buckets.get(k) ?? { n: 0, r: 0, g: 0, b: 0 };
       e.n++;
@@ -82,7 +82,7 @@ async function brandColors(src) {
     const white = [255, 255, 255];
     const deep = [14, 59, 40];
     let ink = green;
-    for (let k = 0; k < 1 && contrast(ink, white) < 4.6; k += 0.04) ink = mixTo(green, [0, 0, 0], k);
+    for (let k = 0; k < 1 && contrast(ink, white) < 5.3; k += 0.04) ink = mixTo(green, [0, 0, 0], k);
     let leaf = green;
     for (let k = 0; k < 1 && contrast(leaf, deep) < 7; k += 0.04) leaf = mixTo(green, white, k);
     return { green: hex(green), greenInk: hex(ink), leaf: hex(leaf) };

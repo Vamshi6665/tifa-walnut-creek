@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { Phone, Camera, MapPin, Check } from 'lucide-react';
 import { STORE } from '@/lib/config';
-import Photo from './Photo';
+import Image from 'next/image';
+import { PHOTOS, CUTOUTS } from '@/content/photos';
+import Cutout from './Cutout';
 
 const TYPES = ['Birthday', 'Wedding', 'Corporate / office', 'School or team', 'Other'];
 
@@ -18,7 +20,7 @@ function Field({ label, children, hint }) {
 }
 
 const input =
-  'mt-1.5 h-12 w-full rounded-[3px] border border-line bg-paper-2 px-3.5 text-[0.975rem] text-ink placeholder:text-ink-faint focus:border-ink';
+  'mt-1.5 h-12 w-full rounded-2xl border border-line bg-paper px-4 text-[0.975rem] text-ink placeholder:text-ink-faint focus:border-ink';
 
 function ContactOptions() {
   return (
@@ -69,24 +71,34 @@ export default function Catering() {
   };
 
   return (
-    <section id="catering" className="relative scroll-mt-16 bg-paper py-24 md:py-32" aria-labelledby="catering-title">
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-4 md:px-8 lg:grid-cols-12">
+    <section id="catering" className="relative scroll-mt-16 bg-paper py-24 md:py-36" aria-labelledby="catering-title">
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-5 md:px-8 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <h2 id="catering-title" className="t-h2" data-warp>
-            Catering, planned with Naina.
+          <p className="t-eyebrow">Catering</p>
+          <h2 id="catering-title" className="t-h2 mt-4">
+            Catering, planned <span className="t-accent">with Naina.</span>
           </h2>
           <p className="t-body mt-6 text-ink-dim">
             Gelato, chocolates and coffee for birthdays, weddings, office treats and school events. Catering for Tifa Walnut Creek is handled
             right here on Locust Street by owner Naina Balupari. Tell us about your event and she&apos;ll get back to you.
           </p>
-          <Photo slot="catering" className="mt-8 aspect-[4/3] rounded-lg" sizes="(min-width: 1024px) 40vw, 100vw" />
+          <div className="relative mt-10 max-w-[520px]">
+            <figure className="print rotate-[-2deg]">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[8px]">
+                <Image src={PHOTOS.icedLattes.src} alt={PHOTOS.icedLattes.alt} fill sizes="(min-width: 1024px) 36vw, 90vw" className="object-cover object-[50%_62%]" />
+              </div>
+            </figure>
+            <div className="absolute -bottom-8 -right-4 sm:-right-10">
+              <Cutout img={CUTOUTS.pumpkin} h="clamp(130px, 14vw, 190px)" sizes="200px" />
+            </div>
+          </div>
         </div>
 
         <div className="lg:col-span-6 lg:col-start-7">
           {enabled === null ? (
             <div className="h-[28rem]" aria-hidden="true" />
           ) : !enabled ? (
-            <div className="rounded-lg border border-line p-6 md:p-8">
+            <div className="rounded-[28px] border border-line bg-paper-2 p-6 md:p-8">
               <h3 className="t-h3">Talk to us about your event</h3>
               <p className="mt-2 text-ink-dim">Call, message or stop by and ask for Naina.</p>
               <div className="mt-6">
@@ -94,7 +106,7 @@ export default function Catering() {
               </div>
             </div>
           ) : state.status === 'sent' ? (
-            <div className="rounded-lg border border-green/30 p-6 md:p-8" role="status">
+            <div className="rounded-[28px] border border-green/30 bg-paper-2 p-6 md:p-8" role="status">
               <Check className="text-green-ink" aria-hidden="true" />
               <h3 className="t-h3 mt-4">Sent to Naina.</h3>
               <p className="mt-2 text-ink-dim">
@@ -102,7 +114,7 @@ export default function Catering() {
               </p>
             </div>
           ) : (
-            <form onSubmit={submit} className="grid gap-5 rounded-lg border border-line p-6 sm:grid-cols-2 md:p-8" noValidate>
+            <form onSubmit={submit} className="grid gap-5 rounded-[28px] border border-line bg-paper-2 p-6 sm:grid-cols-2 md:p-9" noValidate>
               <div className="sm:col-span-2">
                 <Field label="Your name">
                   <input required autoComplete="name" className={input} value={form.name} onChange={set('name')} />
@@ -135,7 +147,7 @@ export default function Catering() {
               {/* honeypot for bots */}
               <input tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" value={form.website} onChange={set('website')} />
               <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
-                <button type="submit" className="btn btn-primary" disabled={state.status === 'sending'} data-magnetic>
+                <button type="submit" className="btn btn-primary" disabled={state.status === 'sending'}>
                   {state.status === 'sending' ? 'Sending…' : 'Send to Naina'}
                 </button>
                 <a href={STORE.phoneHref} className="text-sm text-ink-dim underline-offset-4 hover:underline">

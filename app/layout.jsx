@@ -1,12 +1,13 @@
 import '@fontsource-variable/archivo/wdth.css';
-import '@fontsource-variable/jetbrains-mono';
+import '@fontsource-variable/fraunces/full.css';
+import '@fontsource-variable/fraunces/full-italic.css';
 import './globals.css';
 import { BRAND_COLORS } from '@/content/media';
 
-// When the real logo is in public/brand, its sampled green replaces the default Tifa green.
+// The teal sampled from public/brand/logo.png at build time drives the accent, so dropping in
+// an official logo file re-tunes the site to it. Light scopes only; dark scopes keep their tints.
 const brandCss = BRAND_COLORS
-  ? `html:root,html .on-paper,html [data-mode='day']{--color-green:${BRAND_COLORS.green};--color-green-ink:${BRAND_COLORS.greenInk}}` +
-    `html .on-green,html [data-mode='night']{--color-green:${BRAND_COLORS.leaf};--color-green-ink:${BRAND_COLORS.leaf}}`
+  ? `html:root,html .on-paper{--color-green:${BRAND_COLORS.green};--color-tifa:${BRAND_COLORS.green};--color-green-ink:${BRAND_COLORS.greenInk};--btn-bg:${BRAND_COLORS.green}}`
   : null;
 
 export const metadata = {
@@ -24,7 +25,7 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#1F9A62',
+  themeColor: '#2C7F7A',
 };
 
 const jsonLd = {
@@ -61,17 +62,6 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        {/* SVG displacement filters for scroll-velocity + hover text warps */}
-        <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false">
-          <filter id="tf-warp" x="-5%" y="-25%" width="110%" height="150%" colorInterpolationFilters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency="0.004 0.09" numOctaves="2" seed="7" result="noise" />
-            <feDisplacementMap id="tf-warp-map" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-          <filter id="tf-hover" x="-5%" y="-25%" width="110%" height="150%" colorInterpolationFilters="sRGB">
-            <feTurbulence id="tf-hover-noise" type="turbulence" baseFrequency="0.012 0.03" numOctaves="1" seed="2" result="noise" />
-            <feDisplacementMap id="tf-hover-map" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="B" />
-          </filter>
-        </svg>
         {children}
       </body>
     </html>

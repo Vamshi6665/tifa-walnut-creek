@@ -1,97 +1,131 @@
 @import 'tailwindcss';
 
 /* ------------------------------------------------------------------------ */
-/* Design tokens: Tifa Walnut Creek, green and white like the store.         */
-/* White paper and dark-green ink by default; `.on-green` flips a section to */
-/* deep Tifa green with white ink (every utility below reads these vars).    */
+/* Design tokens: Tifa Walnut Creek, as the store and the sticker look.      */
+/*   walls   warm white and cream                                            */
+/*   sticker Tifa teal with white art (sampled from the cup stickers)        */
+/*   lower wall  the sage wainscot that runs around the shop                 */
+/*   cups    pink, peach and sky (used as small accents only)                */
+/*   cocoa   dark chocolate, for the two interactive night panels            */
+/* `--color-green*` names are kept so every component reads the Tifa teal.   */
 /* ------------------------------------------------------------------------ */
 @theme {
-  --color-paper: #ffffff;
-  --color-paper-2: #f2f8f4;
-  --color-paper-3: #e4efe8;
-  --color-ink: #0c2a1c;
-  --color-ink-dim: #3d5f4c;
-  --color-ink-faint: #5e7a6b;
-  --color-green: #1f9a62; /* Tifa green: fills, marks, decoration */
-  --color-green-ink: #17784d; /* the same green, dark enough for text and buttons (AA) */
-  --color-green-deep: #0e3b28;
-  --color-leaf: #7fe0ae;
-  --color-line: rgb(12 42 28 / 0.12);
+  --color-paper: #fffdf9;
+  --color-paper-2: #f7f2ea;
+  --color-paper-3: #eee6da;
+  --color-ink: #1f2b2a;
+  --color-ink-dim: #4f5d5b;
+  --color-ink-faint: #5e6a67;
+  --color-green: #2c7f7a; /* Tifa teal: fills, stickers, decoration */
+  --color-green-ink: #256f6a; /* same teal, dark enough for text on cream (AA) */
+  --color-green-deep: #1b4f4b;
+  --color-leaf: #9ed7ce; /* teal accent on dark */
+  --color-line: rgb(31 43 42 / 0.12);
 
-  --font-display: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --color-tifa: #2c7f7a;
+  --color-tifa-soft: #dcebe7;
+  --color-sage: #a7bba3;
+  --color-sage-deep: #8fa58b;
+  --color-sage-soft: #e6ece2;
+  --color-pink: #f2a49a;
+  --color-pink-soft: #fbe4de;
+  --color-peach: #f3b97f;
+  --color-peach-soft: #fcebd8;
+  --color-sky: #7fa9b8;
+  --color-cocoa: #2a1f1b;
+
+  --font-display: 'Fraunces Variable', 'Fraunces', ui-serif, Georgia, serif;
   --font-sans: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-mono: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root {
   color-scheme: light;
-  --btn-bg: var(--color-green-ink);
+  --btn-bg: var(--color-tifa);
   --btn-ink: #ffffff;
-  --btn-bg-hover: var(--color-green-deep);
-  --glass-bg: rgb(255 255 255 / 0.8);
-  --glass-shadow: 0 1px 2px rgb(12 42 28 / 0.06), 0 18px 40px -16px rgb(12 42 28 / 0.22);
+  --btn-bg-hover: #1f625e;
+  --glass-bg: rgb(255 253 249 / 0.86);
+  --glass-shadow: 0 1px 2px rgb(31 43 42 / 0.05), 0 22px 48px -22px rgb(31 43 42 / 0.28);
+  --hero-ink: var(--color-ink);
+  --hero-ink-dim: var(--color-ink-dim);
+  --hero-panel: rgb(255 253 249 / 0.7);
+  --hero-line: rgb(31 43 42 / 0.16);
 }
 
-/* deep-green sections (hero, gallery, quiz, dashboard, footer) */
-.on-green,
-[data-mode='night'] {
+/* dark chocolate panels (taste-twin map, flavor quiz, live numbers) */
+.on-cocoa,
+.on-green {
   color-scheme: dark;
-  --color-paper: #0e3b28;
-  --color-paper-2: #124a33;
-  --color-paper-3: #17583d;
-  --color-ink: #ffffff;
-  --color-ink-dim: rgb(255 255 255 / 0.76);
-  --color-ink-faint: rgb(255 255 255 / 0.58);
-  --color-green: #7fe0ae;
-  --color-green-ink: #7fe0ae;
-  --color-line: rgb(255 255 255 / 0.16);
-  --btn-bg: #ffffff;
-  --btn-ink: #0e3b28;
-  --btn-bg-hover: #7fe0ae;
-  --glass-bg: rgb(14 59 40 / 0.62);
-  --glass-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.5);
+  --color-paper: #2a1f1b;
+  --color-paper-2: #34271f;
+  --color-paper-3: #3f3029;
+  --color-ink: #fbf4ea;
+  --color-ink-dim: rgb(251 244 234 / 0.76);
+  --color-ink-faint: rgb(251 244 234 / 0.6);
+  --color-green: #9ed7ce;
+  --color-green-ink: #9ed7ce;
+  --color-line: rgb(251 244 234 / 0.14);
+  --btn-bg: #fbf4ea;
+  --btn-ink: #2a1f1b;
+  --btn-bg-hover: #9ed7ce;
+  --glass-bg: rgb(42 31 27 / 0.72);
+  --glass-shadow: 0 22px 48px -20px rgb(0 0 0 / 0.55);
+  --hero-ink: var(--color-ink);
+  --hero-ink-dim: var(--color-ink-dim);
+  --hero-panel: rgb(42 31 27 / 0.4);
+  --hero-line: rgb(251 244 234 / 0.22);
   color: var(--color-ink);
 }
 
-/* text over the store photo (hero, and the nav while it sits on the hero) */
-[data-mode='night'] {
+/* Tifa teal with white, like the sticker (marquee band, footer, intro) */
+.on-teal {
+  color-scheme: dark;
+  --color-paper: #2c7f7a;
+  --color-paper-2: #2a7671;
+  --color-ink: #ffffff;
+  --color-ink-dim: rgb(255 255 255 / 0.84);
+  --color-ink-faint: rgb(255 255 255 / 0.7);
+  --color-green: #ffffff;
+  --color-green-ink: #ffffff;
+  --color-line: rgb(255 255 255 / 0.26);
+  --btn-bg: #ffffff;
+  --btn-ink: #1b4f4b;
+  --btn-bg-hover: #fbe4de;
   --hero-ink: #ffffff;
-  --hero-ink-dim: rgb(255 255 255 / 0.8);
-  --hero-panel: rgb(14 59 40 / 0.42);
-  --hero-line: rgb(255 255 255 / 0.22);
+  --hero-ink-dim: rgb(255 255 255 / 0.84);
+  --hero-panel: rgb(255 255 255 / 0.08);
+  --hero-line: rgb(255 255 255 / 0.4);
+  color: var(--color-ink);
 }
-/* back to white inside a green scope (the nav once it scrolls, its mobile menu) */
-.on-paper,
-[data-mode='day'] {
+
+/* back to the light palette inside a dark scope (menus, popovers) */
+.on-paper {
   color-scheme: light;
-  --color-paper: #ffffff;
-  --color-paper-2: #f2f8f4;
-  --color-paper-3: #e4efe8;
-  --color-ink: #0c2a1c;
-  --color-ink-dim: #3d5f4c;
-  --color-ink-faint: #5e7a6b;
-  --color-green: #1f9a62;
-  --color-green-ink: #17784d;
-  --color-line: rgb(12 42 28 / 0.12);
-  --btn-bg: var(--color-green-ink);
+  --color-paper: #fffdf9;
+  --color-paper-2: #f7f2ea;
+  --color-paper-3: #eee6da;
+  --color-ink: #1f2b2a;
+  --color-ink-dim: #4f5d5b;
+  --color-ink-faint: #5e6a67;
+  --color-green: #2c7f7a;
+  --color-green-ink: #256f6a;
+  --color-line: rgb(31 43 42 / 0.12);
+  --btn-bg: var(--color-tifa);
   --btn-ink: #ffffff;
-  --btn-bg-hover: var(--color-green-deep);
-  --glass-bg: rgb(255 255 255 / 0.9);
-  --glass-shadow: 0 1px 2px rgb(12 42 28 / 0.06), 0 18px 40px -16px rgb(12 42 28 / 0.22);
-}
-[data-mode='day'] {
+  --btn-bg-hover: #1f625e;
+  --glass-bg: rgb(255 253 249 / 0.92);
   --hero-ink: var(--color-ink);
   --hero-ink-dim: var(--color-ink-dim);
-  --hero-panel: rgb(255 255 255 / 0.7);
-  --hero-line: var(--color-line);
+  --hero-panel: rgb(255 253 249 / 0.7);
+  --hero-line: rgb(31 43 42 / 0.16);
 }
 
 html {
   background: var(--color-paper);
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 72px;
+  scroll-padding-top: 80px;
 }
 
 body {
@@ -100,13 +134,12 @@ body {
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.6;
-  font-stretch: 100%;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: #1f9a62;
+  background: #2c7f7a;
   color: #ffffff;
 }
 
@@ -122,95 +155,119 @@ html.lenis body {
   overflow: clip;
 }
 
-/* Type: one family (Archivo), two widths. Display is set expanded and light,
-   in the "Monument Extended" register the brief asks for; body stays normal width. */
-.t-display {
+/* ------------------------------------------------------------------------ */
+/* Type: Fraunces (soft, warm serif) for headlines, Archivo for everything   */
+/* else. Small labels are letter-spaced capitals, like "CHOCOLATE & GELATO"  */
+/* around the sticker.                                                       */
+/* ------------------------------------------------------------------------ */
+.t-display,
+.t-h2,
+.t-h3,
+.font-display {
   font-family: var(--font-display);
-  font-stretch: 125%;
-  font-weight: 300;
-  letter-spacing: -0.045em;
-  line-height: 0.94;
-  font-size: clamp(2.3rem, 4.2vw, 4.5rem);
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 100, 'WONK' 0;
+}
+.t-display {
+  font-weight: 380;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  font-size: clamp(2.75rem, 6.4vw, 6.25rem);
+  text-wrap: balance;
 }
 .t-h2 {
-  font-family: var(--font-display);
-  font-stretch: 125%;
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  font-size: clamp(2.1rem, 4.4vw, 4rem);
+  font-weight: 380;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  font-size: clamp(2.2rem, 4.6vw, 4.25rem);
   text-wrap: balance;
 }
 .t-h3 {
-  font-family: var(--font-display);
-  font-stretch: 112%;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+  letter-spacing: -0.01em;
+  line-height: 1.18;
+  font-size: clamp(1.2rem, 1.7vw, 1.5rem);
+}
+/* the italic, teal accent word inside a headline */
+.t-accent {
+  font-style: italic;
+  font-weight: 340;
+  color: var(--color-green-ink);
+  font-variation-settings: 'SOFT' 100, 'WONK' 1;
 }
 .t-lede {
-  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  font-size: clamp(1.05rem, 1.25vw, 1.2rem);
   line-height: 1.6;
-  max-width: 40ch;
+  max-width: 42ch;
   text-wrap: pretty;
 }
-/* small structural label: sentence case, never all caps */
+.t-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-green-ink);
+}
 .t-label {
   font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0;
   color: var(--color-ink-dim);
 }
 .t-body {
   max-width: 62ch;
   text-wrap: pretty;
 }
-
-/* Telemetry is the only place the mono face appears */
+/* numbers (hours, counts, prices): same face, even figures */
 .t-tele {
-  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-feature-settings: 'zero' on;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 :focus-visible {
   outline: 2px solid var(--color-green-ink);
   outline-offset: 3px;
-  border-radius: 3px;
+  border-radius: 6px;
 }
 
-/* component classes live in a layer so Tailwind utilities (hidden, md:flex, …) can override them */
 @layer components {
-  /* Buttons */
   .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    min-height: 48px;
-    padding: 0 1.35rem;
-    border-radius: 3px;
-    font-weight: 500;
-    font-stretch: 112%;
-    font-size: 0.9375rem;
-    letter-spacing: -0.01em;
-    transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s var(--ease-out-expo);
-    will-change: transform;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 50px;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.975rem;
+    letter-spacing: -0.005em;
+    transition:
+      background-color 0.25s,
+      color 0.25s,
+      border-color 0.25s,
+      box-shadow 0.3s,
+      transform 0.35s var(--ease-out-expo);
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn:active {
+    transform: translateY(0);
   }
   .btn-primary {
     background: var(--btn-bg);
     color: var(--btn-ink);
+    box-shadow: 0 10px 24px -12px rgb(27 79 75 / 0.6);
   }
   .btn-primary:hover {
     background: var(--btn-bg-hover);
   }
   .btn-ghost {
-    border: 1px solid var(--hero-line, var(--color-line));
+    border: 1.5px solid var(--hero-line, var(--color-line));
     color: var(--hero-ink, var(--color-ink));
     background: var(--hero-panel, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   .btn-ghost:hover {
     border-color: currentColor;
@@ -218,49 +275,55 @@ html.lenis body {
   .btn:disabled {
     opacity: 0.45;
     cursor: not-allowed;
+    transform: none;
   }
 
-
-
-  /* Glass panel used for overlays / hover cards */
+  /* glass panel for overlays and floating cards */
   .holo {
     background: var(--glass-bg);
     border: 1px solid var(--color-line);
     box-shadow: var(--glass-shadow);
-    backdrop-filter: blur(18px) saturate(1.3);
-    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
   }
 
-  /* Scanline + grid texture for telemetry panels */
+  /* quiet card used by the live-numbers panels */
   .hud {
     position: relative;
-    background:
-      linear-gradient(rgb(127 224 174 / 0.05) 1px, transparent 1px) 0 0 / 100% 24px,
-      linear-gradient(180deg, rgb(20 80 54 / 0.55), rgb(10 45 30 / 0.7));
+    background: var(--color-paper-2);
     border: 1px solid var(--color-line);
   }
-  .hud::before,
-  .hud::after {
-    content: '';
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-color: var(--color-green);
-    border-style: solid;
-    opacity: 0.55;
-    pointer-events: none;
-  }
-  .hud::before {
-    top: -1px;
-    left: -1px;
-    border-width: 1px 0 0 1px;
-  }
-  .hud::after {
-    bottom: -1px;
-    right: -1px;
-    border-width: 0 1px 1px 0;
+
+  /* a photo printed like a polaroid, with a soft shadow */
+  .print {
+    background: #fff;
+    padding: 10px 10px 14px;
+    border-radius: 14px;
+    box-shadow:
+      0 1px 2px rgb(31 43 42 / 0.06),
+      0 30px 60px -28px rgb(31 43 42 / 0.45);
   }
 
+  /* a cutout cup sitting on a surface */
+  .cup-shadow {
+    filter: drop-shadow(0 26px 22px rgb(42 31 27 / 0.22)) drop-shadow(0 6px 6px rgb(42 31 27 / 0.12));
+  }
+
+  /* the sage wainscot that runs around the lower wall of the shop */
+  .wainscot {
+    background-color: var(--color-sage);
+    background-image:
+      linear-gradient(180deg, rgb(255 255 255 / 0.55) 0 10px, rgb(0 0 0 / 0.08) 10px 13px, transparent 13px),
+      repeating-linear-gradient(90deg, transparent 0 46px, rgb(0 0 0 / 0.07) 46px 48px, rgb(255 255 255 / 0.12) 48px 50px);
+  }
+
+  /* dotted ring, like the one around the sticker */
+  .dots-line {
+    background-image: radial-gradient(circle, currentColor 1.6px, transparent 2px);
+    background-size: 14px 14px;
+    background-repeat: repeat-x;
+    background-position: center;
+  }
 }
 
 /* Intro (see components/ui/Hero.jsx). Classes are set pre-paint in layout.jsx;
@@ -271,26 +334,42 @@ html.lenis body {
 .tf-intro:not(.tf-intro-quick) #tf-preloader {
   display: grid;
 }
-.tf-intro [data-intro] {
+.tf-intro [data-intro],
+.tf-intro [data-drop] {
   opacity: 0;
 }
 
-/* Fluid cursor (fine pointers only; native cursor hidden only where we draw our own) */
-html.has-fluid-cursor,
-html.has-fluid-cursor a,
-html.has-fluid-cursor button,
-html.has-fluid-cursor canvas {
-  cursor: none;
+/* marquee */
+@keyframes tf-marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
-html.has-fluid-cursor input,
-html.has-fluid-cursor textarea,
-html.has-fluid-cursor select {
-  cursor: auto;
+.marquee-track {
+  animation: tf-marquee 38s linear infinite;
 }
 
-/* Hover displacement on headings */
-.warp-hover {
-  transition: filter 0.4s;
+/* the sticker turns slowly, like it's been slapped on at an angle */
+@keyframes tf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: tf-spin 40s linear infinite;
+}
+
+@keyframes tf-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(calc(var(--r, 0deg) + 4deg));
+  }
+}
+.bob {
+  animation: tf-bob 6s ease-in-out infinite;
 }
 
 .no-scrollbar {

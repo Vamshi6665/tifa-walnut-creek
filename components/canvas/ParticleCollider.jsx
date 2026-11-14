@@ -411,7 +411,7 @@ export default function ParticleCollider({ active = true }) {
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
       aria-hidden="true"
     >
-      <color attach="background" args={['#0A2D1E']} />
+      <color attach="background" args={['#2A1F1B']} />
       <ambientLight intensity={0.25} />
       <Framing />
       <EnergyCore />

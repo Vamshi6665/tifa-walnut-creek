@@ -73,9 +73,9 @@ void main() {
   float d = length(gl_PointCoord - 0.5);
   float a = 1.0 - smoothstep(0.15, 0.5, d);
   if (a < 0.02) discard;
-  vec3 low = vec3(0.09, 0.42, 0.28);
-  vec3 high = vec3(0.5, 0.88, 0.68);
-  vec3 peak = vec3(1.0, 1.0, 0.96);
+  vec3 low = vec3(0.11, 0.36, 0.34);
+  vec3 high = vec3(0.6, 0.84, 0.8);
+  vec3 peak = vec3(1.0, 0.96, 0.9);
   vec3 c = mix(low, high, smoothstep(-0.3, 0.8, vH));
   c = mix(c, peak, smoothstep(1.2, 2.3, vH));
   float band = smoothstep(0.92, 1.0, fract(vH * 4.0)); // contour lines
@@ -198,7 +198,7 @@ export default function HoloTerrain({ active = true, reducedMotion = false, labe
       <Terrain count={t.globe * 3} />
       <Beacon labels={labels} />
       <Anchor position={[DIABLO.x, terrainHeight(DIABLO.x, DIABLO.y) + 0.35, DIABLO.y]} target={labels?.diablo} />
-      <gridHelper args={[11, 22, '#1e6646', '#14452f']} position={[0, -0.36, 0]} />
+      <gridHelper args={[11, 22, '#5a463b', '#3f3029']} position={[0, -0.36, 0]} />
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.55} radius={0.6} />
       </EffectComposer>

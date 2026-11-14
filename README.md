@@ -1,22 +1,23 @@
 # Tifa Chocolate & Gelato — Walnut Creek
 
-The website for Tifa Chocolate & Gelato at 1545 Locust St, Walnut Creek: the store's green and white, its own logo, real store photography and the real menu, with cinematic motion on top.
+The website for Tifa Chocolate & Gelato at 1545 Locust St, Walnut Creek, styled like the shop itself: warm white walls, the sage wainscot that runs around the store, the teal of the Tifa sticker with white on top, and real photos of the gelato, truffles and drinks.
 
 **What a visitor sees**
-- **Arrival:** the Tifa logo drops in on Tifa green and lands while the page loads, then the whole screen slides down to reveal the store. Real gelato cutouts drop in, bounce and pop (tap them to pop again), the headline stretches into place, and live store facts (address, weather, local time, open now) decode in the corner.
-- **Leaving the opening screen:** the photo melts away in deep-green drips into the next section.
-- **Inside the shop:** big real photos glide sideways as you scroll.
-- **Taste Twins:** all 27 menu flavors mapped by taste; pick one to see its four closest matches (with its photo once added).
-- **Find my flavor:** four questions charge a particle collider; the match pops out as a real photo, with sound and a shareable passport.
-- **Reviews:** live Google rating and reviews, credited to their authors.
-- **Catering:** an inquiry form that emails Naina directly (or call / Instagram until email is set up).
-- Live Walnut Creek weather tints the opening photo and adds rain on the glass when it's raining.
+- **Arrival:** the Tifa sticker drops onto Tifa teal while the page loads, the screen slides away, and three real cups fall onto the ledge of the wainscot and land with a little squash. Pendant lamps hang over the counter; truffles drift in the air.
+- **Scrolling off the opening screen:** the cups lift off the ledge on curved paths (one floats up, one sinks down) while a teal "Gelato · Sorbetto · Artisan truffles…" band slides past.
+- **From our kitchen to your cup:** a Tifa cup rides down a dotted curve (the sticker's dotted ring, stretched into a path) as you scroll, pausing at four real photos: the morning batch, the case, the scoop, the seat by the window.
+- **Seasonal flavors:** the cups photographed in the case rise out of colored circles as they scroll into view.
+- **Taste Twins:** all 27 menu flavors mapped by taste on a dark-chocolate panel; pick one to see its four closest matches.
+- **Find my flavor:** four questions charge a particle collider on dark chocolate; the match comes with a shareable passport.
+- **Inside Tifa:** real photos in three columns that slide past each other (outer columns rise, the middle one comes down).
+- **Chocolate & coffee:** truffles orbit the truffle box; the iced tea and mocha drift past photos of the lattes and hot chocolate.
+- **Reviews, Our story, Catering, live quiz numbers, Visit:** ending on the wainscot again with a row of cups on the ledge, then a teal footer with the white logo.
 
-## Adding photos and the logo
-See **[docs/PHOTOS.md](docs/PHOTOS.md)**. In short: drop files into `public/brand/` and `public/photos/` with the listed names, commit, and Vercel rebuilds. Empty slots show labelled placeholders on preview links and nothing in production. The site's green is sampled from the logo file on every build.
+## Photos and the logo
+See **[docs/PHOTOS.md](docs/PHOTOS.md)**. Every image is listed in `content/photos.js`; cutouts (transparent WebP) live in `public/photos/cutouts/`. The logo files in `public/brand/` were traced from the logo printed on the cups; drop the official files in with the same names to replace them, and the site's teal re-tunes to the new `logo.png` on the next build.
 
 ## Theme
-Green and white, like the store. Tokens live in `app/globals.css` (`paper`, `ink`, `green`, `green-ink`, `leaf`); a section with `on-green` flips to deep Tifa green with white type. Canvas and chart colors are in `lib/theme.js`.
+Tokens live in `app/globals.css`: `paper` (warm white), `paper-2` (cream), `ink`, `green`/`green-ink` (the Tifa teal; text-safe on cream), `sage` (wainscot), cup accents `pink`/`peach`/`sky`, and `cocoa`. Scope classes flip a block: `on-teal` (teal with white, like the sticker), `on-cocoa` (dark chocolate panels). Headlines are Fraunces, everything else Archivo. Canvas and chart colors are in `lib/theme.js`.
 
 ## Menu
 `lib/flavors.js` holds the store's menu exactly as on the original site (names, families, tags, allergen flags). Taste profiles for Taste Twins and the quiz are derived from the store's own tags. To change the menu, edit `STORE_MENU` there and run `npm run check`.
@@ -36,8 +37,6 @@ URL flags for demos and screenshots:
 | Flag | Effect |
 |---|---|
 | `?intro=0` / `?intro=1` | Skip the intro / force the full intro (default: full once per tab session, short after) |
-| `?introAt=1.2` | Freeze the intro at that second |
-| `?weather=day\|night\|rain` | Force the weather look (default: live) |
 | `?quality=high\|mid\|low\|none` | Force a render tier (default: auto, adapts live) |
 
 ## Environment variables (Vercel → Settings → Environment Variables)
@@ -65,28 +64,32 @@ app/
   api/track, api/insights   quiz analytics (KV)
   api/ai-note               guarded one-sentence notes
 content/
-  media.js                  photo/logo lookup (+ media.generated.json, built by scripts/scan-media.mjs)
+  photos.js                 every photo and cutout, with sizes and alt text
+  media.js                  logo lookup + brand teal (media.generated.json, built by scripts/scan-media.mjs)
   reviews.js                optional hand-picked real reviews (used only without the Google key)
 components/
-  canvas/HeroStage.jsx      opening photo, gelato cutout drops, LaMa, rain, grain, melt
-  canvas/shaders/           rain on glass, melt transition, noise
-  canvas/ParticleCollider   quiz collider; the match pops out as a real photo
+  ui/Hero.jsx               wall + wainscot, cups drop in, intro timeline, scroll curves
+  ui/Marquee.jsx            tilted teal band
+  ui/Journey.jsx            pinned scroll: a cup rides a dotted curve past four photos
+  ui/SeasonalCase.jsx       seasonal cups rising out of colored circles
+  ui/Showcase.jsx           three photo columns moving in opposite directions
+  ui/Treats.jsx             chocolate (orbiting truffles) and coffee
+  ui/Reviews.jsx, ui/Story.jsx, ui/Catering.jsx, ui/Visit.jsx, ui/Footer.jsx
+  canvas/ParticleCollider   quiz collider
   canvas/FlavorConstellation  Taste Twins map
   canvas/HoloTerrain        dashboard map
-  ui/Hero.jsx               opening screen + intro timeline
-  ui/Showcase.jsx           pinned horizontal photo gallery
-  ui/Reviews.jsx, ui/Catering.jsx, ui/Story.jsx, ui/Visit.jsx, …
 lib/  flavors (menu) · matcher (quiz) · config (store facts) · store · weather · audio · …
 ```
 
 ## Performance and accessibility
-- Photos go through Next's image optimizer (AVIF/WebP, sized per screen), including the WebGL textures.
+- Photos and cutouts go through Next's image optimizer (AVIF/WebP, sized per screen).
 - Canvases load lazily, pause off screen, adapt quality to the device, and are wrapped so a failed scene never breaks the page.
-- Reduced-motion users get no intro, no melt and a plain swipeable gallery.
+- Reduced-motion users get no intro, no scroll-driven motion, and the kitchen-to-cup story as a plain list of photos.
 - Any key, click, scroll or touch skips the intro.
 
 ## Before launch
-- [ ] Add the official logo and photos (docs/PHOTOS.md).
+- [ ] Swap in the official logo files if Naina has them (the current ones are traced from the cup print).
+- [ ] Add a storefront photo and one of the team, if wanted (docs/PHOTOS.md).
 - [ ] Confirm opening hours (`lib/config.js` says 11 AM; one online listing says 10 AM).
 - [ ] Set `GOOGLE_PLACES_API_KEY` for live reviews.
 - [ ] Set `CATERING_EMAIL_TO` + `RESEND_API_KEY` so catering reaches Naina.

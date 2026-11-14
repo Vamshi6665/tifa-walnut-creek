@@ -6,11 +6,13 @@ import { FEATURED_REVIEWS } from '@/content/reviews';
 import { MEDIA } from '@/content/media';
 import { STORE } from '@/lib/config';
 import InertiaCard from './InertiaCard';
+import Cutout from './Cutout';
+import { CUTOUTS } from '@/content/photos';
 
 function Stars({ value, size = 14 }) {
   const full = Math.round(value ?? 0);
   return (
-    <span className="flex gap-0.5 text-ink" aria-label={`${value} out of 5 stars`}>
+    <span className="flex gap-0.5 text-[#E9A23B]" aria-label={`${value} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star key={i} size={size} aria-hidden="true" className={i < full ? 'fill-current' : 'opacity-25'} />
       ))}
@@ -23,10 +25,10 @@ function ReviewCard({ r }) {
     <InertiaCard
       as="figure"
       max={5}
-      className="flex w-[19rem] shrink-0 snap-start flex-col rounded-lg border border-line bg-paper-2 p-6 md:w-[22rem]"
+      className="flex w-[19rem] shrink-0 snap-start flex-col rounded-[24px] border border-line bg-paper p-7 shadow-[0_24px_48px_-32px_rgb(31_43_42/0.35)] md:w-[23rem]"
     >
       <Stars value={r.rating} />
-      <blockquote className="mt-4 line-clamp-[8] flex-1 text-[0.975rem] leading-relaxed text-ink">{r.text}</blockquote>
+      <blockquote className="mt-4 line-clamp-[8] flex-1 font-display text-[1.08rem] font-[380] leading-relaxed text-ink">{r.text}</blockquote>
       <figcaption className="mt-5 flex items-center gap-3 border-t border-line pt-4 text-sm">
         {r.photo ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -65,27 +67,36 @@ export default function Reviews() {
   const mapsUrl = data?.mapsUrl ?? STORE.mapsHref;
 
   return (
-    <section id="reviews" className="relative scroll-mt-16 bg-paper py-24 md:py-32" aria-labelledby="reviews-title">
-      <div className="mx-auto max-w-[1440px] px-4 md:px-8">
-        <div className="grid gap-8 md:grid-cols-12 md:items-end">
-          <h2 id="reviews-title" className="t-h2 md:col-span-7" data-warp>
-            What Walnut Creek says.
-          </h2>
+    <section id="reviews" className="relative scroll-mt-16 bg-paper-2 py-24 md:py-32" aria-labelledby="reviews-title">
+      <div className="mx-auto max-w-[1440px] px-5 md:px-8">
+        <div className="grid gap-10 md:grid-cols-12 md:items-center">
+          <div className="md:col-span-7">
+            <p className="t-eyebrow">Reviews</p>
+            <h2 id="reviews-title" className="t-h2 mt-4">
+              What Walnut Creek <span className="t-accent">says.</span>
+            </h2>
+            <p className="t-body mt-5 text-ink-dim">Our neighbors rate us {rating.toFixed(1)} out of 5 on Google. Read what they say, then come taste for yourself.</p>
+          </div>
           <div className="md:col-span-5">
-            <div className="flex items-end gap-4">
-              <p className="font-display text-[clamp(3.5rem,6vw,5rem)] font-light leading-none tracking-[-0.04em] text-ink [font-stretch:112%]">
-                {rating.toFixed(1)}
-              </p>
-              <div className="pb-2">
-                <Stars value={rating} size={16} />
-                <p className="mt-1 text-sm text-ink-dim">
-                  {count ? `from ${count.toLocaleString('en-US')} Google reviews` : 'on Google'}
+            <div className="relative rounded-[28px] border border-line bg-paper p-7 shadow-[0_30px_60px_-40px_rgb(31_43_42/0.45)] md:p-8">
+              <div className="flex items-end gap-4">
+                <p className="font-display text-[clamp(3.75rem,6.5vw,5.5rem)] font-[350] leading-none tracking-[-0.03em] text-ink">
+                  {rating.toFixed(1)}
                 </p>
+                <div className="pb-2">
+                  <Stars value={rating} size={18} />
+                  <p className="mt-1 text-sm text-ink-dim">
+                    {count ? `from ${count.toLocaleString('en-US')} Google reviews` : 'on Google'}
+                  </p>
+                </div>
+              </div>
+              <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-ghost mt-6">
+                Read every review on Google
+              </a>
+              <div className="pointer-events-none absolute -right-3 -top-16 hidden rotate-[8deg] sm:block md:-right-6 md:-top-20">
+                <Cutout img={CUTOUTS.chocolate} h="clamp(120px, 11vw, 170px)" sizes="140px" />
               </div>
             </div>
-            <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-ghost mt-6">
-              Read every review on Google
-            </a>
           </div>
         </div>
       </div>

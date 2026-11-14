@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
  * (focus the chart, then ←/→).
  */
 
-const SURFACE = '#124A33';
+const SURFACE = '#34271F';
 const GRID = 'rgb(255 255 255 / 0.1)';
 const AXIS_TEXT = 'rgb(255 255 255 / 0.66)';
 
@@ -57,7 +57,7 @@ function roundedTopBar(x, y, w, h, r = 4) {
 /* ------------------------------------------------------------------ */
 /* Column chart — quiz activity by hour (single series, no legend)     */
 /* ------------------------------------------------------------------ */
-export function HourColumns({ values, color = '#7FE0AE', height = 200, label }) {
+export function HourColumns({ values, color = '#9ED7CE', height = 200, label }) {
   const ref = useRef(null);
   const width = useWidth(ref);
   const [active, setActive] = useState(null);

@@ -58,7 +58,7 @@ function Starfield({ count = 500 }) {
   }, [count]);
   return (
     <points geometry={geo}>
-      <pointsMaterial size={0.06} color="#9CCBB2" transparent opacity={0.55} sizeAttenuation depthWrite={false} />
+      <pointsMaterial size={0.06} color="#E9D9C2" transparent opacity={0.55} sizeAttenuation depthWrite={false} />
     </points>
   );
 }
@@ -283,7 +283,7 @@ export default function FlavorConstellation({ active = true, reducedMotion = fal
       gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       aria-hidden="true"
     >
-      <fog attach="fog" args={['#0B3322', 9, 22]} />
+      <fog attach="fog" args={['#2A1F1B', 9, 22]} />
       <Starfield count={tier === 'low' ? 250 : 600} />
       <Graph reducedMotion={reducedMotion} labels={labels} />
       <EffectComposer multisampling={tier === 'low' ? 0 : 4}>

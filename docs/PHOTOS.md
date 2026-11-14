@@ -1,55 +1,50 @@
-# Adding Tifa photos and the logo
+# Photos and the logo
 
-Everything visual on the site comes from real files in `public/`. Drop a file in
-the right place with the right name, commit it (the GitHub web editor's
-"Add file → Upload files" works), and Vercel rebuilds the site with it. Empty
-slots show a labelled placeholder on preview links and stay quiet in production.
+Every image on the site is real and listed in one place: **`content/photos.js`**.
+
+## Store photos — `public/photos/`
+JPGs, about 1600 px on the long side. To swap one, replace the file with a new one of the
+**same name** (GitHub web editor → "Add file → Upload files" works) and, if its shape is
+different, update its width/height in `content/photos.js` so the layout doesn't jump.
+
+| File | Where it shows |
+|---|---|
+| `caramel-swirl-pan.jpg` | Kitchen-to-cup story, stop 1 · Inside Tifa |
+| `gelato-case-pov.jpg` | Kitchen-to-cup story, stop 2 · Inside Tifa |
+| `pomegranate-cup.jpg` | Kitchen-to-cup story, stop 3 |
+| `latte-and-cookie.jpg` | Kitchen-to-cup story, stop 4 |
+| `pink-guava-cup.jpg` | Our story · Inside Tifa |
+| `celebration-cup.jpg` | Our story · Inside Tifa |
+| `iced-lattes-counter.jpg` | Catering · Inside Tifa |
+| `truffle-box.jpg` | Chocolate · Inside Tifa |
+| `latte-trio.jpg`, `hot-chocolate.jpg` | Coffee · Inside Tifa |
+| `mocha-by-the-window.jpg` | Visit · Inside Tifa |
+| `chocolate-cup.jpg`, `pumpkin-cup.jpg`, `iced-tea.jpg` | Inside Tifa |
+
+Photos with Instagram text labels were cropped below the label.
+
+## Cutouts — `public/photos/cutouts/`
+Transparent WebP, used for everything that moves: the cups dropping onto the ledge, the cup
+riding the dotted curve, the seasonal cups, the drinks, the floating truffles and the row of
+cups at the bottom.
+
+To make a new one: on an iPhone, open the photo, press and hold the cup, "Copy" or "Share"
+the lifted subject and save it; or use remove.bg. Export as WebP or PNG with a transparent
+background, crop tight to the cup, then add it to `CUTOUTS` in `content/photos.js`.
+
+Seasonal flavors in "Spotted in the case" are listed in `SEASONAL` in the same file; use the
+flavor's name exactly as the store labels it.
 
 ## Logo — `public/brand/`
 | File | Used for |
 |---|---|
-| `logo.png` or `logo.svg` | the official Tifa logo, transparent background |
-| `logo-white.png` or `.svg` | white version for the green parts of the site (intro drop on Tifa green, nav over the photo, footer). If missing, the color logo is shown on a small white tile there |
+| `logo.png` | the teal sticker with white art (nav, hero sticker, story) |
+| `logo-white.png` | white art only (intro screen, marquee, footer, teal cards) |
+| `logo-teal.png` | teal art only, for cream backgrounds |
 
-The site's green is sampled from `logo.png` when the site builds, so buttons, links and accents match the real logo exactly. Until a logo file is added, the store name is shown as plain text; nothing is drawn in its place.
-
-## Store photos — `public/photos/`
-Landscape, at least 2000 px wide, originals rather than screenshots.
-
-| File name | Where it shows |
-|---|---|
-| `hero.jpg` | full-screen photo behind the opening (the gelato case or counter works best) |
-| `gelato-case.jpg` | big photo 1 in the "inside the shop" gallery |
-| `truffle-case.jpg` | gallery photo 2 |
-| `chocolates.jpg` | gallery photo 3 |
-| `interior.jpg` | gallery photo 4 and Our Story |
-| `storefront.jpg` | Visit section |
-| `llama-wall.jpg` | Our Story, "Find the LaMa" |
-| `kitchen-window.jpg` | Our Story, "Made where you can see it" |
-| `drinks.jpg` | Our Story, Groundwork coffee |
-| `team.jpg` | Our Story (only with everyone's OK) |
-| `catering.jpg` | Catering section |
-
-Any extra photos in `public/photos/gallery/` are added to the end of the gallery.
-
-## Gelato cutouts — `public/photos/cutouts/`
-These are the cups/scoops that drop in and pop on the opening screen, and the
-photo that pops out of the quiz when it finds your match.
-
-- PNG with a **transparent background**. On an iPhone: open the photo, press and
-  hold the gelato, "Copy" or "Share" the lifted subject, save it as PNG. Or use
-  remove.bg.
-- Name each file after the flavor id so the site can label it, e.g.
-  `salted-caramel.png`, `strawberry-rose-sorbetto.png` (ids are listed in
-  `lib/flavors.js`; they're the flavor name in lowercase with dashes).
-- Up to 3 appear on the opening screen.
-- `llama.png` is special: it becomes the hidden LaMa peeking from the bottom
-  of the opening screen.
-
-## One photo per flavor (optional) — `public/photos/flavors/`
-`<flavor-id>.jpg`, e.g. `honey-lavender.jpg`. Shown in Taste Twins and used by
-the quiz when there's no cutout for that flavor.
+These were traced from the logo printed on the cups. If Naina has the official files, upload
+them with the same names. The site's teal is sampled from `logo.png` on every build.
 
 ## Please don't upload
-Photos where children's faces are recognizable, or customers who haven't agreed
-to be on the website.
+Photos where children's faces are recognizable, or customers who haven't agreed to be on the
+website.

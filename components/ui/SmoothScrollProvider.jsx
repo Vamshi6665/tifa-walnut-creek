@@ -8,11 +8,8 @@ import { scrollState } from '@/lib/scrollState';
 
 /**
  * Lenis momentum scrolling driven by GSAP's ticker (one rAF for both), with
- * ScrollTrigger kept in sync. Also runs the scroll-velocity text warp:
- *   [data-warp] elements get an SVG displacement filter + skew proportional to
- *   scroll speed. The filter is removed entirely when settled, so idle frames
- *   cost nothing.
- * Reduced-motion users get native scrolling and no warp.
+ * ScrollTrigger kept in sync. Section headings rise in as they enter.
+ * Reduced-motion users get native scrolling and no motion.
  */
 export default function SmoothScrollProvider({ children }) {
   useEffect(() => {
@@ -41,31 +38,21 @@ export default function SmoothScrollProvider({ children }) {
     // the hero intro holds the page still until the scene has arrived
     if (document.documentElement.classList.contains('tf-intro')) lenis.stop();
 
-    // ---- signature motion: section headings stretch from condensed to expanded
-    // (Archivo's width axis) as they enter. Only headings below the fold are armed,
-    // so nothing already on screen ever blinks.
-    const stretchTriggers = [];
+    // ---- section headings rise gently into place as they enter (below the fold only,
+    // so nothing already on screen ever blinks)
+    const revealTriggers = [];
     document.querySelectorAll('section:not(#top) h2.t-h2').forEach((el) => {
       if (el.getBoundingClientRect().top < window.innerHeight) return;
-      gsap.set(el, { fontStretch: '62%', opacity: 0, letterSpacing: '0.01em' });
-      stretchTriggers.push(
+      gsap.set(el, { opacity: 0, y: 34 });
+      revealTriggers.push(
         ScrollTrigger.create({
           trigger: el,
-          start: 'top 88%',
+          start: 'top 90%',
           once: true,
-          onEnter: () =>
-            gsap.to(el, {
-              fontStretch: '125%',
-              opacity: 1,
-              letterSpacing: '-0.04em',
-              duration: 1.4,
-              ease: 'expo.out',
-              clearProps: 'fontStretch,letterSpacing,opacity',
-            }),
+          onEnter: () => gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', clearProps: 'opacity,transform' }),
         }),
       );
     });
-
     lenis.on('scroll', (e) => {
       scrollState.velocity = e.velocity;
       scrollState.progress = e.progress;
@@ -73,37 +60,13 @@ export default function SmoothScrollProvider({ children }) {
       ScrollTrigger.update();
     });
 
-    // ---- scroll-velocity warp ------------------------------------------------
-    const map = document.getElementById('tf-warp-map');
-    let warp = 0;
-    let filtered = false;
-    let els = Array.from(document.querySelectorAll('[data-warp]'));
-    const refresh = () => {
-      els = Array.from(document.querySelectorAll('[data-warp]'));
-    };
-    const mo = new MutationObserver(refresh);
-    mo.observe(document.body, { childList: true, subtree: true });
-
-    const tick = (time) => {
-      lenis.raf(time * 1000);
-      const v = scrollState.velocity;
-      warp += (Math.min(Math.abs(v) / 60, 1) - warp) * 0.18;
-      const on = warp > 0.04;
-      if (map) map.setAttribute('scale', (warp * 26).toFixed(2));
-      const skew = gsap.utils.clamp(-5, 5, v * 0.12);
-      for (const el of els) {
-        if (on !== filtered) el.style.filter = on ? 'url(#tf-warp)' : '';
-        el.style.transform = on ? `skewY(${skew.toFixed(2)}deg)` : '';
-      }
-      filtered = on;
-    };
+    const tick = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      stretchTriggers.forEach((t) => t.kill());
+      revealTriggers.forEach((t) => t.kill());
       gsap.ticker.remove(tick);
-      mo.disconnect();
       lenis.destroy();
       delete window.__lenis;
       document.documentElement.classList.remove('lenis', 'lenis-smooth');

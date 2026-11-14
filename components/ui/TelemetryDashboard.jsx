@@ -58,7 +58,7 @@ function ago(t) {
 function Stat({ label, value, suffix = '', hero = false, sub }) {
   const n = useAnimatedNumber(typeof value === 'number' ? value : null);
   return (
-    <InertiaCard className="hud rounded-md p-5" max={6}>
+    <InertiaCard className="hud rounded-[22px] p-5" max={6}>
       <p className="text-sm font-medium text-ink-dim">{label}</p>
       <p className={`t-tele mt-2 font-medium tracking-tight text-ink ${hero ? 'text-[clamp(2.75rem,5vw,4rem)] leading-none' : 'text-[clamp(1.75rem,3vw,2.5rem)] leading-none'}`}>
         {typeof value === 'number' ? n.toLocaleString('en-US') : value}
@@ -71,7 +71,7 @@ function Stat({ label, value, suffix = '', hero = false, sub }) {
 
 function Panel({ title, sub, children, className = '' }) {
   return (
-    <div className={`hud rounded-md p-5 md:p-6 ${className}`}>
+    <div className={`hud rounded-[22px] p-5 md:p-6 ${className}`}>
       <h3 className="font-display text-lg font-medium text-ink">{title}</h3>
       {sub ? <p className="mt-0.5 text-sm text-ink-dim">{sub}</p> : null}
       <div className="mt-5">{children}</div>
@@ -146,12 +146,15 @@ export default function TelemetryDashboard() {
   );
 
   return (
-    <section id="dashboard" ref={section} className="on-green relative scroll-mt-16 bg-paper pb-24 pt-16 md:pb-32" aria-labelledby="dash-title">
-      <div className="mx-auto max-w-[1440px] px-4 md:px-8">
+    <section id="dashboard" ref={section} className="on-cocoa relative scroll-mt-16 bg-paper py-24 md:py-32" aria-labelledby="dash-title">
+      <div className="mx-auto max-w-[1440px] px-5 md:px-8">
         <div className="grid gap-6 md:grid-cols-12 md:items-end">
-          <h2 id="dash-title" className="t-h2 md:col-span-7" data-warp>
-            Mission control.
-          </h2>
+          <div className="md:col-span-7">
+            <p className="t-eyebrow">Live from the flavor quiz</p>
+            <h2 id="dash-title" className="t-h2 mt-4">
+              What Walnut Creek <span className="t-accent">is craving.</span>
+            </h2>
+          </div>
           <p className="t-body text-ink-dim md:col-span-5">
             Live numbers from every flavor quiz taken on this site. No names, no locations, just what Walnut Creek is craving.
           </p>
@@ -160,11 +163,11 @@ export default function TelemetryDashboard() {
         {/* one control row, above everything it scopes */}
         <div className="mt-10 flex flex-wrap items-center gap-3">
           {d?.sample ? (
-            <p className="rounded-[3px] border border-ink/40 bg-ink/10 px-4 py-2 text-sm font-medium text-ink">
+            <p className="rounded-full border border-ink/30 bg-ink/10 px-4 py-2 text-sm font-medium text-ink">
               Sample data. Connect Upstash Redis to show live numbers.
             </p>
           ) : (
-            <p className="flex items-center gap-2 rounded-[3px] border border-green/30 px-4 py-2 text-sm font-medium text-ink">
+            <p className="flex items-center gap-2 rounded-full border border-green/30 px-4 py-2 text-sm font-medium text-ink">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green opacity-60 motion-reduce:hidden" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-green" />
@@ -196,10 +199,10 @@ export default function TelemetryDashboard() {
 
         <div className={`mt-6 grid gap-4 transition-opacity lg:grid-cols-12 ${loading && d ? 'opacity-70' : 'opacity-100'}`}>
           {/* holo map */}
-          <div ref={globe} className="hud relative min-h-[340px] overflow-hidden rounded-md lg:col-span-5 lg:row-span-2">
+          <div ref={globe} className="hud relative min-h-[340px] overflow-hidden rounded-[22px] lg:col-span-5 lg:row-span-2">
             {globeNear && tier !== 'none' ? <SafeBoundary><HoloTerrain active={globeVisible} reducedMotion={reduce} labels={mapLabels} /></SafeBoundary> : null}
             <div ref={storeLabel} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 opacity-0">
-              <span className="t-tele block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md border border-green/40 bg-paper/80 px-2 py-1 text-[0.7rem] text-ink">
+              <span className="t-tele block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-full border border-green/40 bg-paper/80 px-2.5 py-1 text-[0.7rem] text-ink">
                 1545 Locust St
               </span>
             </div>
@@ -219,7 +222,7 @@ export default function TelemetryDashboard() {
           </div>
 
           {table && d ? (
-            <div className="hud overflow-x-auto rounded-md p-5 lg:col-span-7">
+            <div className="hud overflow-x-auto rounded-[22px] p-5 lg:col-span-7">
               <table className="w-full min-w-[480px] text-left text-sm">
                 <caption className="mb-3 text-left font-display text-lg font-medium text-ink">All dashboard numbers</caption>
                 <thead className="text-ink-dim">
@@ -281,7 +284,7 @@ export default function TelemetryDashboard() {
                 ) : null}
               </Panel>
               <Panel title="Dietary needs" sub="Share of quizzes asking for each" className="lg:col-span-4">
-                {d ? <BarList rows={dietRows} color="#7FE0AE" max={100} format={(v) => `${v}%`} /> : null}
+                {d ? <BarList rows={dietRows} color="#9ED7CE" max={100} format={(v) => `${v}%`} /> : null}
               </Panel>
               <Panel title="Latest matches" sub="Most recent first" className="lg:col-span-3">
                 {d?.recent?.length ? (

@@ -1,13 +1,81 @@
 {
-  "generatedAt": "2026-10-30T13:25:56.426Z",
+  "generatedAt": "2026-11-14T22:13:51.844Z",
   "showPlaceholders": true,
   "brand": {
-    "logo": null,
-    "logoWhite": null,
-    "colors": null
+    "logo": "/brand/logo.png",
+    "logoWhite": "/brand/logo-white.png",
+    "colors": {
+      "green": "#2c7f7a",
+      "greenInk": "#287570",
+      "leaf": "#abccca"
+    }
   },
-  "photos": {},
-  "cutouts": [],
+  "photos": {
+    "caramel-swirl-pan": "/photos/caramel-swirl-pan.jpg",
+    "celebration-cup": "/photos/celebration-cup.jpg",
+    "chocolate-cup": "/photos/chocolate-cup.jpg",
+    "gelato-case-pov": "/photos/gelato-case-pov.jpg",
+    "hot-chocolate": "/photos/hot-chocolate.jpg",
+    "iced-lattes-counter": "/photos/iced-lattes-counter.jpg",
+    "iced-tea": "/photos/iced-tea.jpg",
+    "latte-and-cookie": "/photos/latte-and-cookie.jpg",
+    "latte-trio": "/photos/latte-trio.jpg",
+    "mocha-by-the-window": "/photos/mocha-by-the-window.jpg",
+    "pink-guava-cup": "/photos/pink-guava-cup.jpg",
+    "pomegranate-cup": "/photos/pomegranate-cup.jpg",
+    "pumpkin-cup": "/photos/pumpkin-cup.jpg",
+    "truffle-box": "/photos/truffle-box.jpg"
+  },
+  "cutouts": [
+    {
+      "id": "celebration-cup",
+      "src": "/photos/cutouts/celebration-cup.webp"
+    },
+    {
+      "id": "chocolate-cup",
+      "src": "/photos/cutouts/chocolate-cup.webp"
+    },
+    {
+      "id": "iced-tea",
+      "src": "/photos/cutouts/iced-tea.webp"
+    },
+    {
+      "id": "mocha-freeze",
+      "src": "/photos/cutouts/mocha-freeze.webp"
+    },
+    {
+      "id": "pink-guava-pineapple-sorbetto",
+      "src": "/photos/cutouts/pink-guava-pineapple-sorbetto.webp"
+    },
+    {
+      "id": "pomegranate-balsamic-chip",
+      "src": "/photos/cutouts/pomegranate-balsamic-chip.webp"
+    },
+    {
+      "id": "pumpkin-almond-swirl",
+      "src": "/photos/cutouts/pumpkin-almond-swirl.webp"
+    },
+    {
+      "id": "truffle-orange",
+      "src": "/photos/cutouts/truffle-orange.webp"
+    },
+    {
+      "id": "truffle-pink",
+      "src": "/photos/cutouts/truffle-pink.webp"
+    },
+    {
+      "id": "truffle-purple",
+      "src": "/photos/cutouts/truffle-purple.webp"
+    },
+    {
+      "id": "truffle-red",
+      "src": "/photos/cutouts/truffle-red.webp"
+    },
+    {
+      "id": "truffle-sprinkle",
+      "src": "/photos/cutouts/truffle-sprinkle.webp"
+    }
+  ],
   "flavors": {},
   "gallery": []
 }

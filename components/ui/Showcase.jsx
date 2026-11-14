@@ -1,111 +1,78 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { MEDIA } from '@/content/media';
-import Photo from './Photo';
+import { useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Camera } from 'lucide-react';
+import { PHOTOS } from '@/content/photos';
+import { STORE } from '@/lib/config';
 
 /**
- * Big real photos of the shop. On wide screens the section pins and vertical
- * scrolling glides the photos sideways (each photo also drifts inside its
- * frame for depth). On phones and with reduced motion it's a plain swipeable
- * row. Extra photos dropped in /public/photos/gallery are appended.
+ * "Inside Tifa": real photos from the shop in three columns that slide past
+ * each other as you scroll: the outer columns rise while the middle one comes
+ * down. Two columns on phones. Static with reduced motion.
  */
-const PANELS = [
-  {
-    slot: 'gelato-case',
-    title: 'Twenty-seven flavors, every morning.',
-    body: 'Gelato and sorbetto made in-house on Locust Street, so the case changes with the season.',
-  },
-  { slot: 'truffle-case', title: 'Truffles by the door.', body: 'A case of chocolate truffles greets you on the way in.' },
-  { slot: 'chocolates', title: 'The chocolate half of Tifa.', body: 'Artisan chocolates, cookies and macarons alongside the gelato.' },
-  {
-    slot: 'interior',
-    title: 'Room to stay a while.',
-    body: 'Tables, games and space to linger, next to the Lesher Center with parking next door.',
-  },
+const COLUMNS = [
+  [PHOTOS.icedLattes, PHOTOS.chocolateCup, PHOTOS.truffles, PHOTOS.pumpkinCup],
+  [PHOTOS.celebrationCup, PHOTOS.latteTrio, PHOTOS.pinkGuavaCup, PHOTOS.hotChocolate],
+  [PHOTOS.mochaWindow, PHOTOS.icedTea, PHOTOS.gelatoCase, PHOTOS.caramelPan],
 ];
 
 export default function Showcase() {
-  const wrap = useRef(null);
-  const track = useRef(null);
-  const [pinned, setPinned] = useState(false);
-  const panels = [...PANELS, ...MEDIA.gallery.map((src) => ({ src }))];
+  const root = useRef(null);
 
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)');
-    const on = () => setPinned(mq.matches);
-    on();
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
+    const el = root.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      const st = { trigger: el.querySelector('[data-cols]'), start: 'top bottom', end: 'bottom top', scrub: 0.5 };
+      el.querySelectorAll('[data-col]').forEach((c) => {
+        const dir = Number(c.dataset.col);
+        gsap.fromTo(c, { yPercent: dir > 0 ? -4 : 8 }, { yPercent: dir > 0 ? 6 : -8, ease: 'none', scrollTrigger: st });
+      });
+    }, el);
+    return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
-    if (!pinned) return undefined;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const el = wrap.current;
-      const t = track.current;
-      if (!el || !t) return;
-      const r = el.getBoundingClientRect();
-      const span = r.height - window.innerHeight;
-      const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
-      const travel = t.scrollWidth - window.innerWidth;
-      t.style.transform = `translate3d(${(-p * travel).toFixed(1)}px, 0, 0)`;
-      // inner drift: each photo slides a little against the track
-      t.querySelectorAll('[data-drift] img').forEach((img) => {
-        const b = img.parentElement.getBoundingClientRect();
-        const c = (b.left + b.width / 2) / window.innerWidth - 0.5;
-        img.style.transform = `translate3d(${(c * -6).toFixed(2)}%, 0, 0) scale(1.14)`;
-      });
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [pinned, panels.length]);
-
-  const items = panels.map((p, i) => (
-    <figure key={p.slot ?? p.src} className="relative w-[82vw] shrink-0 snap-center md:w-[62vw] lg:w-[54vw]">
-      <div data-drift className="overflow-hidden rounded-lg">
-        <Photo
-          slot={p.slot}
-          src={p.src}
-          alt={p.title ?? 'Tifa Walnut Creek'}
-          className="aspect-[4/3] md:aspect-[16/10]"
-          sizes="(min-width: 1024px) 54vw, (min-width: 768px) 62vw, 82vw"
-          priority={i === 0}
-        />
-      </div>
-      {p.title ? (
-        <figcaption className="mt-5 grid gap-1 md:grid-cols-[1fr_1.2fr] md:gap-8">
-          <span className="t-h3 text-ink">{p.title}</span>
-          <span className="text-ink-dim">{p.body}</span>
-        </figcaption>
-      ) : null}
-    </figure>
-  ));
-
-  if (!pinned) {
-    return (
-      <section id="shop" className="on-green relative bg-paper py-20" aria-label="Inside the shop">
-        <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-4">{items}</div>
-      </section>
-    );
-  }
   return (
-    <section id="shop" ref={wrap} className="on-green relative bg-paper" style={{ height: `${100 + (panels.length - 1) * 62}svh` }} aria-label="Inside the shop">
-      <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
-        <div ref={track} className="flex gap-[4vw] pl-[8vw] pr-[8vw] will-change-transform">
-          {items}
+    <section id="shop" ref={root} className="relative overflow-hidden bg-paper-2 py-24 md:py-32" aria-labelledby="shop-title">
+      <div className="mx-auto max-w-[1440px] px-5 md:px-8">
+        <div className="grid gap-6 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-7">
+            <p className="t-eyebrow">Inside Tifa</p>
+            <h2 id="shop-title" className="t-h2 mt-4">
+              Come for the gelato. <span className="t-accent">Stay for everything else.</span>
+            </h2>
+          </div>
+          <div className="md:col-span-5">
+            <p className="t-body text-ink-dim">
+              Iced lattes on the counter, truffles in the case, hot chocolate by the window. A few favorites from our feed.
+            </p>
+            <a href={STORE.instagram} target="_blank" rel="noreferrer" className="btn btn-ghost mt-6">
+              <Camera size={17} aria-hidden="true" /> {STORE.instagramHandle}
+            </a>
+          </div>
         </div>
+      </div>
+      <div data-cols className="mx-auto mt-14 grid max-w-[1440px] grid-cols-2 gap-3 px-3 md:mt-20 md:grid-cols-3 md:gap-6 md:px-8">
+        {COLUMNS.map((col, ci) => (
+          <ul key={ci} data-col={ci === 1 ? 1 : -1} className={`flex flex-col gap-3 md:gap-6 ${ci === 2 ? 'hidden md:flex' : ''} ${ci === 1 ? 'pt-16 md:pt-0' : ''}`}>
+            {(ci === 0 ? [...col, ...COLUMNS[2].slice(0, 2)] : ci === 1 ? [...col, ...COLUMNS[2].slice(2)] : col).map((ph, i) => (
+              <li key={ph.src} className={`${i >= 4 ? 'md:hidden' : ''} group overflow-hidden rounded-[18px] bg-paper-3`}>
+                <Image
+                  src={ph.src}
+                  alt={ph.alt}
+                  width={ph.w}
+                  height={ph.h}
+                  sizes="(min-width: 768px) 32vw, 48vw"
+                  className="h-auto w-full transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+                />
+              </li>
+            ))}
+          </ul>
+        ))}
       </div>
     </section>
   );
