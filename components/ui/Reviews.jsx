@@ -93,7 +93,7 @@ export default function Reviews() {
               <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-ghost mt-6">
                 Read every review on Google
               </a>
-              <div className="pointer-events-none absolute -right-3 -top-16 hidden rotate-[8deg] sm:block md:-right-6 md:-top-20">
+              <div className="pointer-events-none absolute -top-20 right-4 hidden rotate-[6deg] sm:block md:-top-24 md:right-6">
                 <Cutout img={CUTOUTS.chocolate} h="clamp(120px, 11vw, 170px)" sizes="140px" />
               </div>
             </div>
