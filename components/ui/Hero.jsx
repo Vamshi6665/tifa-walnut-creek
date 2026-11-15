@@ -314,7 +314,9 @@ export default function Hero() {
           <div key={t.src} data-drift={k} className={`absolute z-30 ${cls}`}>
             <div data-intro="pop">
               <div className="bob" style={{ '--r': r, animationDelay: `${k * -2}s` }}>
-                <Cutout img={t} h={s} sizes="80px" alt="" className="rounded-full" />
+                <span className="truffle">
+                  <Cutout img={t} h={s} sizes="80px" alt="" shadow={false} className="rounded-full" />
+                </span>
               </div>
             </div>
           </div>

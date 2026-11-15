@@ -21,6 +21,7 @@ const STOPS = [
     title: 'Churned in-house, in small batches.',
     body: 'Gelato and sorbetto are made right here on Locust Street, so the case changes with the seasons.',
     photo: PHOTOS.caramelPan,
+    pos: '50% 40%',
     tilt: -3,
   },
   {
@@ -28,6 +29,7 @@ const STOPS = [
     title: `${STORE.flavorCount} flavors to choose from.`,
     body: "Salted Caramel, Honey Lavender, Mango Chamoy Sorbetto and more. Can't choose just one? Get two.",
     photo: PHOTOS.gelatoCase,
+    pos: '50% 72%',
     tilt: 2.5,
   },
   {
@@ -95,7 +97,7 @@ function measure(width, vh) {
     const onRight = x > width / 2;
     return { left: onRight ? margin : width - margin - cardW, top: y, onRight };
   });
-  return { wide, width, vh, trackH, pts, d: smoothPath(pts), cardW, cards, cup: wide ? Math.min(vh * 0.3, 270) : Math.min(vh * 0.14, width * 0.3, 130) };
+  return { wide, width, vh, trackH, pts, d: smoothPath(pts), cardW, cards, cup: wide ? Math.min(vh * 0.34, 310) : Math.min(vh * 0.17, width * 0.36, 150) };
 }
 
 export default function Journey() {
@@ -197,7 +199,7 @@ export default function Journey() {
     // camera: keep the cup a little above the middle of the screen
     const cam = clamp(lay.vh * 0.52 - pt.y, -(lay.trackH - lay.vh), 0);
     if (track.current) track.current.style.transform = `translate3d(0, ${cam.toFixed(1)}px, 0)`;
-    if (cup.current) cup.current.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0) translate(-50%, -88%) rotate(${g.tilt.toFixed(2)}deg)`;
+    if (cup.current) cup.current.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0) translate(-38%, -90%) rotate(${g.tilt.toFixed(2)}deg)`;
     if (maskPath.current) maskPath.current.style.strokeDashoffset = `${(L - len).toFixed(1)}`;
     // pin each photo once the cup gets close
     stopLens.forEach((sl, i) => {
@@ -327,7 +329,14 @@ function StopCard({ stop, n }) {
   return (
     <figure className="print" style={{ rotate: `${stop.tilt}deg` }}>
       <div className="relative aspect-[4/3] overflow-hidden rounded-[8px]">
-        <Image src={stop.photo.src} alt={stop.photo.alt} fill sizes="(min-width: 900px) 430px, 340px" className="object-cover" />
+        <Image
+          src={stop.photo.src}
+          alt={stop.photo.alt}
+          fill
+          sizes="(min-width: 900px) 430px, 340px"
+          className="object-cover"
+          style={{ objectPosition: stop.pos ?? '50% 50%' }}
+        />
       </div>
       <figcaption className="px-2 pb-1 pt-4">
         <p className="t-eyebrow">

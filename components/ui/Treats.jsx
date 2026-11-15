@@ -46,7 +46,9 @@ export default function Treats() {
                 <div key={deg} className="absolute inset-0" style={{ transform: `rotate(${deg}deg)` }}>
                   <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
                     <div data-spin>
-                      <Cutout img={TRUFFLES[i]} h="clamp(52px, 6vw, 86px)" sizes="90px" alt="" className="rounded-full" />
+                      <span className="truffle">
+                        <Cutout img={TRUFFLES[i]} h="clamp(52px, 6vw, 86px)" sizes="90px" alt="" shadow={false} className="rounded-full" />
+                      </span>
                     </div>
                   </div>
                 </div>
