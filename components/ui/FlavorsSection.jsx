@@ -116,7 +116,7 @@ export default function FlavorsSection() {
           </div>
           <div className="md:col-span-5">
             <p className="t-body text-ink-dim">
-              Each point is one of today&apos;s {FLAVORS.length} flavors, placed by taste. Close together means they taste alike.
+              Each point is a flavor from our menu, placed by taste. Close together means they taste alike.
               Pick one to light up its four nearest neighbors.
             </p>
             <div className="mt-5">

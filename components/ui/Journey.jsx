@@ -17,8 +17,8 @@ import { usePrefersReducedMotion } from './useInView';
 
 const STOPS = [
   {
-    kicker: 'Every morning',
-    title: 'Churned in-house, in small batches.',
+    kicker: 'Small batches',
+    title: 'Made in house, in small batches.',
     body: 'Gelato and sorbetto are made right here on Locust Street, so the case changes with the seasons.',
     photo: PHOTOS.caramelPan,
     pos: '50% 40%',
@@ -236,7 +236,7 @@ export default function Journey() {
       <h2 id="journey-title" className="t-h2 mt-4">
         From our kitchen <span className="t-accent">to your cup.</span>
       </h2>
-      <p className="t-lede mt-5 text-ink-dim">Scroll down and follow a scoop from the morning batch to the table by the window.</p>
+      <p className="t-lede mt-5 text-ink-dim">Scroll down and follow a scoop from the batch pan to the table by the window.</p>
     </div>
   );
 

@@ -13,7 +13,7 @@ const COLS = [
   {
     title: 'Visit',
     links: [
-      [STORE.address, STORE.mapsHref],
+      [`${STORE.address}, ${STORE.cityLine}`, STORE.mapsHref],
       [STORE.phone, STORE.phoneHref],
       ['Hours', '#visit'],
     ],

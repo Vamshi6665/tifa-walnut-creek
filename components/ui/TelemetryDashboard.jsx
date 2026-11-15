@@ -270,7 +270,7 @@ export default function TelemetryDashboard() {
               <Panel title="Quizzes per day" sub="Last 14 days" className="lg:col-span-7">
                 {d ? <DailyLine data={d.daily} label="Quizzes per day, last 14 days" /> : <div className="h-[200px]" />}
               </Panel>
-              <Panel title="Top flavor matches" sub={`Out of ${FLAVORS.length} flavors`} className="lg:col-span-5">
+              <Panel title="Top flavor matches" sub="Across the whole menu" className="lg:col-span-5">
                 {d ? (
                   <BarList
                     rows={flavorRows}

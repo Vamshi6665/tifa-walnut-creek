@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { BRAND } from '@/content/photos';
 
-const WORDS = ['Gelato', 'Sorbetto', 'Artisan truffles', 'Groundwork coffee', 'Made in-house every morning', 'Walnut Creek'];
+const WORDS = ['Gelato', 'Sorbetto', 'Artisan truffles', 'Groundwork coffee', 'Made in house in small batches', 'Walnut Creek'];
 
 /**
  * A tilted Tifa-teal band with white type, the sticker's own colors.
