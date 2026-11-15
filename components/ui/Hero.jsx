@@ -245,23 +245,23 @@ export default function Hero() {
       <div className="relative z-10 mx-auto max-w-[1440px] px-5 pt-28 md:absolute md:inset-x-0 md:bottom-[26%] md:top-0 md:flex md:items-center md:px-8 md:pt-16">
         <div data-copy className="md:w-[50%] lg:w-[47%]">
           <p className="t-eyebrow" data-intro="ui">
-            Walnut Creek · 1545 Locust St
+            1545 Locust St · Walnut Creek
           </p>
           <h1 className="t-display mt-5 text-ink">
             <span className="block overflow-hidden pb-[0.06em]">
               <span className="block" data-intro="line">
-                Made this morning
+                Made in house,
               </span>
             </span>
             <span className="block overflow-hidden pb-[0.14em]">
               <span className="block" data-intro="line">
-                on <span className="t-accent">Locust Street.</span>
+                in <span className="t-accent">small batches.</span>
               </span>
             </span>
           </h1>
           <p className="t-lede mt-5 text-ink-dim" data-intro="ui">
-            {STORE.flavorCount} flavors of gelato and sorbetto made in-house every day, artisan chocolates and Groundwork coffee. Next to the
-            Lesher Center.
+            {STORE.flavorCount} flavors of gelato and sorbetto, artisan chocolates and Groundwork coffee at 1545 Locust St, Walnut Creek, next
+            to the Lesher Center.
           </p>
           <div className="mt-8 flex flex-wrap gap-3" data-intro="ui">
             <a href="#game" className="btn btn-primary">

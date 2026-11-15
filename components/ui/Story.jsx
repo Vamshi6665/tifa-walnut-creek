@@ -33,8 +33,8 @@ export default function Story() {
               brings people together.
             </p>
             <p>
-              Every batch is made in-house, every morning, on Locust Street. Not a franchise delivery from a freezer truck. Something made
-              today, by people who live here.
+              Everything is made in house, in small batches, right here on Locust Street. Not a franchise delivery from a freezer truck:
+              made by a local family, for the neighborhood.
             </p>
           </div>
         </div>

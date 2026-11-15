@@ -7,7 +7,7 @@ The website for Tifa Chocolate & Gelato at 1545 Locust St, Walnut Creek, styled 
 - **Scrolling off the opening screen:** the cups lift off the ledge on curved paths (one floats up, one sinks down) while a teal "Gelato · Sorbetto · Artisan truffles…" band slides past.
 - **From our kitchen to your cup:** a Tifa cup rides down a dotted curve (the sticker's dotted ring, stretched into a path) as you scroll, pausing at four real photos: the morning batch, the case, the scoop, the seat by the window.
 - **Seasonal flavors:** the cups photographed in the case rise out of colored circles as they scroll into view.
-- **Taste Twins:** all 27 menu flavors mapped by taste on a dark-chocolate panel; pick one to see its four closest matches.
+- **Taste Twins:** every menu flavor mapped by taste on a dark-chocolate panel; pick one to see its four closest matches.
 - **Find my flavor:** four questions charge a particle collider on dark chocolate; the match comes with a shareable passport.
 - **Inside Tifa:** real photos in three columns that slide past each other (outer columns rise, the middle one comes down).
 - **Chocolate & coffee:** truffles orbit the truffle box; the iced tea and mocha drift past photos of the lattes and hot chocolate.

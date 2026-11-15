@@ -14,10 +14,10 @@ export const metadata = {
   metadataBase: new URL('https://tifa-walnut-creek.vercel.app'),
   title: 'Tifa Chocolate & Gelato | Walnut Creek, CA',
   description:
-    'Small-batch gelato made in-house every morning, artisan chocolate and Groundwork coffee at 1545 Locust St, downtown Walnut Creek. Build a scoop, find your flavor, meet its taste twins.',
+    'Gelato made in house in small batches, artisan chocolate and Groundwork coffee at 1545 Locust St, Walnut Creek. Build a scoop, find your flavor, meet its taste twins.',
   openGraph: {
     title: 'Tifa Chocolate & Gelato | Walnut Creek',
-    description: '27 flavors made in-house daily on Locust Street. Find yours.',
+    description: '24 flavors, made in house in small batches on Locust Street. Find yours.',
     type: 'website',
   },
 };
